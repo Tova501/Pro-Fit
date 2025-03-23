@@ -1,0 +1,18 @@
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* גובה מלא של הדף */
+}
+
+.navbar {
+    width: 100%; /* תופס את כל רוחב הדף */
+    background-color: lightblue; /* צבע רקע לדוגמה */
+    padding: 10px; /* ריווח פנימי */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* צל */
+}
+
+.content {
+    flex: 1; /* תופס את שאר המקום */
+    padding: 20px; /* ריווח פנימי */
+    overflow-y: auto; /* מאפשר גלילה אם התוכן גדול מדי */
+}

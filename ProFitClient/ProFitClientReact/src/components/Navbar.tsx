@@ -2,9 +2,9 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import HomeIcon from '@mui/icons-material/Home';
-import { Link } from 'react-router-dom';
 import Auth from './authentication/Auth'; 
+import {useState} from 'react'
+import { Link } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [authOpen, setAuthOpen] = useState(false);
@@ -24,6 +24,7 @@ const Navbar: React.FC = () => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           ProFit
         </Typography>
+        <Button color="inherit" component={Link} to={'/'}>
           Home
         </Button>
           <Button color="inherit" component={Link} to={'/job'}>

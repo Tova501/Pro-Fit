@@ -16,15 +16,20 @@ namespace ProFit.Data.Reposories
         {
         }
 
-        public async Task<bool> AddPermissinForRoleAsync(string roleName, Permission permission)
+        public Task<bool> AddPermissinForRoleAsync(string roleName, Permission permission)
         {
-            var role = await this.GetRoleByNameAsync(roleName);
-            if (role == null)
-                return false;
-
-            role.Permissions.Add(permission);
-            return true;
+            throw new NotImplementedException();
         }
+
+        //public async Task<bool> AddPermissinForRoleAsync(string roleName, Permission permission)
+        //{
+        //    var role = await this.GetRoleByNameAsync(roleName);
+        //    if (role == null)
+        //        return false;
+
+        //    role.Permissions.Add(permission);
+        //    return true;
+        //}
 
         public async Task<Role> GetRoleByNameAsync(string roleName)
         {
@@ -32,12 +37,17 @@ namespace ProFit.Data.Reposories
             return result;
         }
 
-        public async Task<bool> IsRoleHasPermissinAsync(string roleName, string permissionName)
+        public Task<bool> IsRoleHasPermissinAsync(string roleName, string permissionName)
         {
-            var result = await _context.Roles
-                .AnyAsync(role => role.RoleName == roleName && role.Permissions
-                .Any(permission => permission.PermissionName == permissionName));
-            return result;
+            throw new NotImplementedException();
         }
+
+        //public async Task<bool> IsRoleHasPermissinAsync(string roleName, string permissionName)
+        //{
+        //    var result = await _context.Roles
+        //        .AnyAsync(role => role.RoleName == roleName && role.Permissions
+        //        .Any(permission => permission.PermissionName == permissionName));
+        //    return result;
+        //}
     }
 }

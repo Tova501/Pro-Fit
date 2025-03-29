@@ -1,75 +1,57 @@
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// import swal from 'sweetalert2';
-// jo
-// const UploadCV = () => {
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../redux/store';
+import swal from 'sweetalert2';
+import { uploadGeneralCV } from '../redux/slices/cvSlice';
 
-//     const [file, setFile] = useState<File | null>(null);
-//     const validateFileType = (file: File) => {
-//         const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-//         return allowedTypes.includes(file.type);
-//     };
+const UploadCV = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const [file, setFile] = useState<File | null>(null);
+    const uploadStatus = useSelector((state: any) => state.cv.uploadStatus);
 
-//     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//         if (event.target.files && event.target.files.length > 0) {
-//             setFile(event.target.files[0]);
-//         }
-//     };
+    const validateFileType = (file: File) => {
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        return allowedTypes.includes(file.type);
+    };
 
-//     const validateFile = () => {
-//         if (!file) {
-//             swal.fire({
-//                 title: 'Please select a file to upload',
-//                 icon: 'warning',
-//                 timer: 2000
-//             })
-//             return false;
-//         }
-//         if(!validateFileType(file)) {
-//             swal.fire({
-//                 title: 'Invalid file type. Only PDF, DOC, DOCX files are allowed',
-//                 icon: 'warning',
-//                 timer: 2000
-//             })
-//             return false;
-//         }
-//         return true;
-//     };
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            setFile(event.target.files[0]);
+        }
+    };
 
-//     const handleUpload = async () => {
-//         if (!validateFile()) {
-//             return;
-//         }
+    const handleUpload = () => {
+        if (!file) {
+            swal.fire({
+                title: 'Please select a file to upload',
+                icon: 'warning',
+                timer: 2000,
+            });
+            return;
+        }
 
-//         const formData = new FormData();
-//         if (file) {
-//             formData.append('CV', file);
-//         }
+        if (!validateFileType(file)) {
+            swal.fire({
+                title: 'Invalid file type. Only PDF, DOC, DOCX files are allowed',
+                icon: 'warning',
+                timer: 2000,
+            });
+            return;
+        }
 
-//         try {
-//             const response = await axios.post('http://your-api-url/upload', formData, {
-//                 headers: {
-//                     'Content-Type': 'multipart/form-data',
-//                 },
-//             });
-//             setFile(null);
-//             swal.fire({
-//                 title: 'File uploaded successfully',
-//                 icon: 'success',
-//                 timer: 2000
-//             })
-//         } catch (error) {
-//             console.error('Error uploading file:', error);
-//         }
-//     };
+        dispatch(uploadGeneralCV({ file }));
+    };
 
-//     return (
-//         <div>
-//             <input type="file" onChange={handleFileChange} />
-//             <button onClick={handleUpload}>Upload Resume</button>
-//         </div>
-//     );
-// };
+    return (
+        <div>
+            <input type="file" onChange={handleFileChange} />
+            <button onClick={handleUpload} disabled={uploadStatus === 'loading'}>
+                {uploadStatus === 'loading' ? 'Uploading...' : 'Upload Resume'}
+            </button>
+        </div>
+    );
+};
 
-// export default UploadCV;
+export default UploadCV;
 

@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import { loginUser } from '../../redux/slices/userSlice';
 import Swal from 'sweetalert2';
+import '../../styles/Style.css'
 
 interface FormData {
     email: string;

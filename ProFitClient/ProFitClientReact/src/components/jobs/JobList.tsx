@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchJobs } from '../../redux/slices/jobSlice';
 import { RootState, AppDispatch } from '../../redux/store';
 import JobItem from './JobSmallItem';
-import { CircularProgress, Container, Grid, Typography } from '@mui/material';
+import { CircularProgress, Container, Typography, Box } from '@mui/material';
 
-const JobList: React.FC = () => {
+const RecruiterJobList: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
     const { jobs, loading, error } = useSelector((state: RootState) => state.job);
 
@@ -23,18 +23,31 @@ const JobList: React.FC = () => {
 
     return (
         <Container>
-            <Typography variant="h4" component="h1" gutterBottom>
-                Job Listings
-            </Typography>
-            <Grid container spacing={4}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 4,
+                    justifyContent: 'center',
+                    mt: 4,
+                }}
+            >
                 {jobs.map((job) => (
-                    <Grid item xs={12} sm={6} md={4} key={job.id}>
-                        <JobItem job={job} />
-                    </Grid>
+                    <Box
+                        key={job.id}
+                        sx={{
+                            width: '300px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <JobItem job={job} userType="candidate" />
+                    </Box>
                 ))}
-            </Grid>
+            </Box>
         </Container>
     );
 };
 
-export default JobList;
+export default RecruiterJobList;

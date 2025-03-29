@@ -23,11 +23,14 @@ namespace ProFit.Core.Entities
         [Required]
         [PasswordPropertyText]
         public string Password { get; set; }
-        public string? Company { get; set; }
         public List<Job> Jobs { get; set; } = new List<Job>();
         public List<CV> CVs { get; set; } = new List<CV>();
+
         [Required]
-        public ICollection<Role> Roles { get; set; } = new HashSet<Role>();
+        [ForeignKey(nameof(Role))]
+        public int RoleId { get; set; }
+        public Role Role { get; set; }
+
         public bool IsActive { get; set; } = true;
         [Column("CreatedAt", TypeName = "timestamp with time zone")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

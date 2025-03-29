@@ -61,7 +61,7 @@ namespace ProFit.API.Controllers
             }
 
             return Ok(authResult.Value);
-            }
+        }
 
     }
 }

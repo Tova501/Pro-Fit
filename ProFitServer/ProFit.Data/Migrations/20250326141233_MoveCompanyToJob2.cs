@@ -5,7 +5,7 @@
 namespace ProFit.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateForeignKeyToJob : Migration
+    public partial class MoveCompanyToJob2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

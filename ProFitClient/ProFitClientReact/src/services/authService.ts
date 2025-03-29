@@ -2,7 +2,7 @@ import axios from 'axios';
 import User from '../models/userType';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/authTypes';
 
-const API_URL = 'https://localhost:7131/api/Auth'; // שנה לכתובת ה-API שלך
+const API_URL = 'https://localhost:7131/api/Auth'; 
 
 export const login = async (credentials: LoginRequest): Promise<User> => {
     try {

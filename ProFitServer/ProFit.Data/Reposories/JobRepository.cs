@@ -18,16 +18,15 @@ namespace ProFit.Data.Reposories
         {
         }
 
-        public async Task<Job?> GetJobWithCVsAsync(int jobId)
+        public async Task<Job?> GetJobWithApplicationsAsync(int jobId)
         {
             return await _context.Jobs
-                .Include(j => j.CVs)
+                .Include(j => j.Applications)
                 .FirstOrDefaultAsync(j => j.Id == jobId);
         }
 
         public async override Task<Job> UpdateAsync(int id, Job entity)
         {
-            entity.UpdatedAt = DateTime.Now;
             return await base.UpdateAsync(id, entity);
         }
     }

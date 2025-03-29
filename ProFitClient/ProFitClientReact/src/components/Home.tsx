@@ -1,53 +1,96 @@
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid'; 
-import Paper from '@mui/material/Paper';
+import { Container, Box, Card, CardContent, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
-import { Typography } from '@mui/material';
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <Container>
-      <Box className="hero" sx={{ my: 4 }}>
+      <Box
+        sx={{
+          my: 4,
+          textAlign: 'center',
+        }}
+      >
         <Typography variant="h2" component="h1" gutterBottom>
           Welcome to ProFit
         </Typography>
         <Typography variant="h5" component="p" color="textSecondary">
-          Your ultimate tool for analyzing CVs and matching them to job opportunities.
+          Your ultimate tool for recruiters and candidates.
         </Typography>
       </Box>
-      <Grid container spacing={4} className="features">
-        <Grid item xs={12} md={4} component="div"> {/* הוסף את הפרופס component */}
-          <Paper className="feature" sx={{ p: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: 4,
+          flexWrap: 'wrap',
+          mt: 4,
+        }}
+      >
+        {/* ריבוע עבור מגייסים */}
+        <Card
+          sx={{
+            width: 300,
+            height: 200,
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            boxShadow: 3,
+            transition: 'transform 0.3s, box-shadow 0.3s',
+            '&:hover': {
+              transform: 'scale(1.05)',
+              boxShadow: 6,
+            },
+          }}
+          onClick={() => handleNavigate('/recruiter')}
+        >
+          <CardContent>
             <Typography variant="h4" component="h2" gutterBottom>
-              Analyze CVs
+              For Recruiters
             </Typography>
             <Typography variant="body1" color="textSecondary">
-              Use our advanced algorithms to analyze CVs and extract key information.
+              Manage job postings, review candidates, and streamline your hiring process.
             </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4} component="div"> {/* הוסף את הפרופס component */}
-          <Paper className="feature" sx={{ p: 2 }}>
+          </CardContent>
+        </Card>
+
+        {/* ריבוע עבור מועמדים */}
+        <Card
+          sx={{
+            width: 300,
+            height: 200,
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            boxShadow: 3,
+            transition: 'transform 0.3s, box-shadow 0.3s',
+            '&:hover': {
+              transform: 'scale(1.05)',
+              boxShadow: 6,
+            },
+          }}
+          onClick={() => handleNavigate('/candidate')}
+        >
+          <CardContent>
             <Typography variant="h4" component="h2" gutterBottom>
-              Match to Jobs
+              For Candidates
             </Typography>
             <Typography variant="body1" color="textSecondary">
-              Find the best job matches for candidates based on their skills and experience.
+              Upload your CV, find job opportunities, and track your applications.
             </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4} component="div"> {/* הוסף את הפרופס component */}
-          <Paper className="feature" sx={{ p: 2 }}>
-            <Typography variant="h4" component="h2" gutterBottom>
-              Improve Hiring
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              Streamline your hiring process and make better hiring decisions.
-            </Typography>
-          </Paper>
-        </Grid>
-      </Grid>
+          </CardContent>
+        </Card>
+      </Box>
     </Container>
   );
 };

@@ -14,7 +14,8 @@ using FluentValidation.AspNetCore;
 using ProFit.Service.Validators;
 using FluentValidation;
 using Amazon.S3;
-using Amazon.Extensions.NETCore.Setup; // הוספת namespace זה
+using Amazon.Extensions.NETCore.Setup;
+using ProFit.API.Middlewares; // הוספת namespace זה
 
 namespace ProFit.API
 {
@@ -36,8 +37,8 @@ namespace ProFit.API
             builder.Services.AddScoped<IJobService, JobService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICVService, CVService>();
-            builder.Services.AddScoped<IRoleService, RoleService>();
-            builder.Services.AddScoped<IPermissionService, PermissionService>();
+            //builder.Services.AddScoped<IRoleService, RoleService>();
+            //builder.Services.AddScoped<IPermissionService, PermissionService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IS3Service, S3Service>();
 
@@ -46,7 +47,7 @@ namespace ProFit.API
             builder.Services.AddScoped<ICVRepository, CVRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-            builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+            //builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             // הוספת הגדרות AWS
@@ -128,6 +129,8 @@ namespace ProFit.API
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
+
+            app.UseMiddleware<JwtAuthenticationMiddleware>();
 
             app.UseAuthorization();
 

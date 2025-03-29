@@ -15,20 +15,42 @@ namespace ProFit.Service.Services
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryManager _repository;
-        public CVService(IRepositoryManager repository, IMapper mapper)
+        private readonly IS3Service _s3Service;
+
+        public CVService(
+            IRepositoryManager repository, 
+            IMapper mapper,
+            IS3Service s3Service)
         {
             _repository = repository;
             _mapper = mapper;
+            _s3Service = s3Service;
         }
 
+        public async Task<string> GenerateUploadUrl(int userId, string contentType)
+        {
+            var userIdString = userId.ToString();
+            var url = await _s3Service.GeneratePresignedUrlAsync("General", userIdString, contentType);
+            return url;
+        }
+        public async Task<CvDTO> ConfirmGeneralCVUpload(int userId, string contentType)
+        {
+            CV cv = new CV()
+            {
+                CandidateId = userId,
+                IsGeneral = true,
+                ContentType = contentType
+            };
+            var resultCV = await _repository.CVs.AddAsync(cv);
+            var cvDto = _mapper.Map<CvDTO>(resultCV);
+            return cvDto;
+        }
         public async Task<CvDTO> AddAsync(int jobId, int userId)
         {
             CV cv = new CV()
             {
                 Id = 0,
                 CandidateId = userId,
-                JobId = jobId,
-                Score = 100
             };
 
             var result = await _repository.CVs.AddAsync(cv);

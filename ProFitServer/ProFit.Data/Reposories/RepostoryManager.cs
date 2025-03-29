@@ -13,8 +13,7 @@ namespace ProFit.Data.Reposories
         IJobRepository jobRepository, 
         IUserRepository userRepository, 
         ICVRepository cvRepository,
-        IRoleRepository roleRepository,
-        IPermissionRepository permissionRepository
+        IRoleRepository roleRepository
     ) : IRepositoryManager
     {
         private readonly DataContext _context = context;
@@ -22,7 +21,7 @@ namespace ProFit.Data.Reposories
         public IUserRepository Users => userRepository;
         public ICVRepository CVs => cvRepository;
         public IRoleRepository Roles => roleRepository;
-        public IPermissionRepository Permissions => permissionRepository;
+        //public IPermissionRepository Permissions => permissionRepository;
 
 
         public async Task<int> SaveAsync()

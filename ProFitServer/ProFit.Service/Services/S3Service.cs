@@ -30,7 +30,7 @@ namespace ProFit.Service.Services
             _s3Client = new AmazonS3Client(accessKey, secretKey, Amazon.RegionEndpoint.GetBySystemName(region));
         }
 
-        public async Task<string> GeneratePresignedUrlAsync(string fileName, string folderName, string contentType)
+        public async Task<string> GeneratePresignedUrlAsync(string folderName, string fileName, string contentType)
         {
             var key = $"{folderName}/{fileName}";
             var listRequest = new ListObjectsV2Request

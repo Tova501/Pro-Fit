@@ -5,25 +5,18 @@
 namespace ProFit.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class RenameColumnJob : Migration
+    public partial class MoveScoreToApplication2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ReruiterId",
-                table: "Jobs");
+
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "ReruiterId",
-                table: "Jobs",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0);
+
         }
     }
 }

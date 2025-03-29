@@ -12,12 +12,18 @@ public class Job
     public string Title { get; set; }
     [Required]
     public string Description { get; set; }
+    public string? Company { get; set; }
     [Required]
-    public string Requirments { get; set; }
+    public string Requirements { get; set; }
+
+    public string Skills { get; set; }
+    public int YearsOfExperienceRequired { get; set; } 
+    public string Location { get; set; }
+
     public int RecruiterId { get; set; }
     [ForeignKey("RecruiterId")]
     public User User { get; set; }
-    public List<CV> CVs { get; set; } = new List<CV>();
+    public List<Application> Applications { get; set; } = new List<Application>();
     [Column("CreatedAt", TypeName = "timestamp with time zone")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     [Column("UpdatedAt", TypeName = "timestamp with time zone")]

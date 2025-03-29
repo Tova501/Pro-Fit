@@ -9,5 +9,7 @@ namespace ProFit.Core.IServices
         Task<CvDTO> AddAsync(int jobId, int userId);
         Task<CvDTO> UpdateAsync(int id, MemoryStream stream);
         Task<bool> DeleteAsync(int id);
+        Task<string> GenerateUploadUrl(int jobId, string contentType);
+        Task<CvDTO> ConfirmGeneralCVUpload(int jobId, string contentType);
     }
 }

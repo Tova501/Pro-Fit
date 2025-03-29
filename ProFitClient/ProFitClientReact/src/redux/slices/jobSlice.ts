@@ -1,8 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getAllJobs, addJob, updateJob, deleteJob } from '../../services/jobService';
+import { Job, JobPostModel } from '../../models/jobTypes';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 interface JobState {
-    jobs: any[];
+    jobs: Job[];
     loading: boolean;
     error: string | null;
 }
@@ -19,20 +22,26 @@ export const fetchJobs = createAsyncThunk('jobs/fetchJobs', async () => {
     return response;
 });
 
-export const createJob = createAsyncThunk('jobs/createJob', async (jobData: any) => {
+export const createJob = createAsyncThunk('jobs/createJob', async (jobData: JobPostModel) => {
     const response = await addJob(jobData);
     return response;
 });
 
-export const editJob = createAsyncThunk('jobs/editJob', async ({ jobId, jobData }: { jobId: string, jobData: any }) => {
-    const response = await updateJob(jobId, jobData);
-    return response;
+export const editJob = createAsyncThunk('jobs/editJob', async ({ jobId, jobData }: { jobId: number, jobData: any }) => {
+    try {
+        const response = await updateJob(jobId, jobData);
+        return response;
+    }
+    catch(error){
+        throw error;
+    }
 });
 
-export const removeJob = createAsyncThunk('jobs/removeJob', async (jobId: string) => {
+export const removeJob = createAsyncThunk('jobs/removeJob', async (jobId: number) => {
     const response = await deleteJob(jobId);
     return response;
 });
+
 
 // Slice
 const jobSlice = createSlice({

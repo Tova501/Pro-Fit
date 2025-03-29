@@ -6,6 +6,7 @@ import { AppDispatch } from '../../redux/store';
 import { registerUser } from '../../redux/slices/userSlice';
 import validationRules from '../../validations/RegisterValidations';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
     name: string;
@@ -16,6 +17,7 @@ interface FormData {
 
 const Register: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>({
         mode: 'onBlur'
     });
@@ -30,6 +32,7 @@ const Register: React.FC = () => {
                     timer: 3000,
                     showConfirmButton: false
                 });
+                navigate('/upload-cv'); // נווט לעמוד העלאת קובץ
                 console.log('Registration successful:', resultAction.payload);
             } else if (registerUser.rejected.match(resultAction)) {
                 console.log('Registration failed:', resultAction.payload);
@@ -50,7 +53,7 @@ const Register: React.FC = () => {
 
     return (
         <Container maxWidth="sm">
-            <Box mt={5} mb={5}> {/* הוספת margin bottom */}
+            <Box mt={5} mb={5}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Register
                 </Typography>

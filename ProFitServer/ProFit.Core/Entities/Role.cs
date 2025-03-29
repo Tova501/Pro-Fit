@@ -27,6 +27,5 @@ namespace ProFit.Core.Entities
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         
         public ICollection<User>? Users { get; set; } = new List<User>();
-        public ICollection<Permission> Permissions { get; set; } = new List<Permission>();
     }
 }

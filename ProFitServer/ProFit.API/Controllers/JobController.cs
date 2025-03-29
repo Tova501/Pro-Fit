@@ -48,16 +48,7 @@ namespace ProFit.API.Controllers
         [HttpPost("{id}/Apply")]
         public async Task<ActionResult<JobDTO>> Apply(int id)
         {
-            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdString == null)
-            {
-                return Unauthorized();
-            }
-
-            if (!int.TryParse(userIdString, out int userId))
-            {
-                return BadRequest("Invalid user ID");
-            }
+            var userId = (int)HttpContext.Items["userId"];
             var cv = await _jobService.ApplyAsync(id, userId);
             if (cv == null)
             {
@@ -88,11 +79,12 @@ namespace ProFit.API.Controllers
         [HttpPost]
         public async Task<ActionResult<JobDTO>> Post([FromBody] JobPostModel jobPost)
         {
-            var job = _mapper.Map<Job>(jobPost);
-            var jobDTO = _mapper.Map<JobDTO>(job);
+            var userId = (int)HttpContext.Items["UserId"];
+            var jobDTO = _mapper.Map<JobDTO>(jobPost);
+            jobDTO.RecruiterId = userId;
             var result = await _jobService.AddAsync(jobDTO);
             if (result == null)
-        {
+            {
                 return BadRequest();
             }
             return Ok(result);
@@ -102,13 +94,27 @@ namespace ProFit.API.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<JobDTO>> Put(int id, [FromBody] JobPutModel jobPut)
         {
-            var job = _mapper.Map<Job>(jobPut);
-            var jobDto = _mapper.Map<JobDTO>(job);
-            var resultJob = await _jobService.UpdateAsync(id, jobDto);
-            if(resultJob == null)
-        {
-                return BadRequest();
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdString == null)
+            {
+                return Unauthorized();
             }
+            if (!int.TryParse(userIdString, out int userId))
+            {
+                return BadRequest("Invalid user ID");
+            }
+            var authorizationResult = await _jobService.CanManageJob(id, userId);
+            if (!authorizationResult.IsSuccess)
+            {
+                return NotFound();
+            }
+            if (!authorizationResult.Value)
+            {
+                return Unauthorized();
+            }
+            var job = _mapper.Map<JobDTO>(jobPut);
+
+            var resultJob = await _jobService.UpdateAsync(id, job);
             return Ok(resultJob);
         }
 

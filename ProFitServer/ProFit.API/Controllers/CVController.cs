@@ -35,6 +35,27 @@ namespace ProFit.API.Controllers
             return Ok(result);
         }
 
+        // GET api/<CVController>/5
+        [HttpPost("generate-upload-url")]
+        public async Task<IActionResult> GenerateUploadUrl([FromBody] CVPostModel cv)
+        {
+            var userId = (int)HttpContext.Items["UserId"];
+            var url = _cvService.GenerateUploadUrl(userId, cv.ContentType);
+            if (url == null)
+            {
+                return BadRequest();
+            }
+            return Ok(new { presignedUrl = url });
+        }
+
+        [HttpPost("confirm-upload")]
+        public async Task<IActionResult> ConfirmUpload([FromBody] CVPostModel cv)
+        {
+            var userId = (int)HttpContext.Items["UserId"];
+            var cvResult = _cvService.ConfirmGeneralCVUpload(userId, cv.ContentType);
+            return Ok(cvResult);
+        }
+
         // PUT api/<CVController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult<string>> Put(int id, [FromBody]IFormFile file)

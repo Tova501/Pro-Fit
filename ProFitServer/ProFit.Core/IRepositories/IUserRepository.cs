@@ -13,6 +13,5 @@ namespace ProFit.Core.IRepositories
         public Task<User> LoginAsync(string email, string password);
         public Task<bool> UpdatePasswordAsync(int id, string password);
         public Task<bool> UpdateNameAsync(int id, string name);
-        public Task<bool> UpdateRoleAsync(int id, Role role);
     }
 }

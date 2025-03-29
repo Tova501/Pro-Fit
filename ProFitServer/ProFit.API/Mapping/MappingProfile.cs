@@ -19,8 +19,7 @@ namespace ProFit.API.Mapping
             CreateMap<User, UserPutModel>().ReverseMap();
 
             CreateMap<JobDTO, Job>().ReverseMap();
-            CreateMap<UserDTO, User>().ReverseMap().
-                ForMember(dest => dest.ContentType, opt => opt.Ignore()); ;
+            CreateMap<UserDTO, User>().ReverseMap();
             CreateMap<CV, CvDTO>().ReverseMap().
                 ForMember(dest => dest.IsGeneral, opt => opt.Ignore());
 
@@ -28,6 +27,7 @@ namespace ProFit.API.Mapping
             CreateMap<UserDTO, LoginModel>().ReverseMap();
             CreateMap<UserDTO, RegisterModel>().ReverseMap();
 
+            CreateMap<JobPutModel, JobDTO>();
         }
     }
 }

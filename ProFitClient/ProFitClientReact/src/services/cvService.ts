@@ -1,11 +1,12 @@
 import axios from 'axios';
+import { getToken } from './authService';
 
-const API_URL = 'http://localhost:7131/api';
+const API_URL = 'https://localhost:7131/api';
 
 export const getCV = async (id: number) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${API_URL}/cv/${id}`, {
+        const response = await axios.get(`${API_URL}/CV/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -17,26 +18,47 @@ export const getCV = async (id: number) => {
     }
 };
 
-export const uploadCV = async (cvData: any, jobId: number) => {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await axios.post(`${API_URL}/job/${jobId}/apply`, cvData, {
+export const generateUploadUrl = async (contentType: string) => {
+    const response = await axios.post(
+        `${API_URL}/CV/generate-upload-url`,
+        { contentType }, 
+        {
             headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error creating CV:', error);
-        throw error;
-    }
+                Authorization: `Bearer ${getToken()}`,
+                'Content-Type': 'application/json'
+            },
+        }
+    );
+    return response.data.presignedUrl.result;
+};
+
+export const uploadFileToPresignedUrl = async (presignedUrl: string, file: File) => {
+    console.log(presignedUrl)
+    await axios.put(presignedUrl, file, {
+        headers: {
+            'Content-Type': file.type,
+        },
+    });
+};
+
+export const confirmUpload = async (contentType: string) => {
+    console.log("confirmUpload");
+    const response = await axios.post(
+        `${API_URL}/CV/confirm-upload`,
+        {  contentType},
+        {
+            headers: {
+                Authorization: `Bearer ${getToken()}`,
+            },
+        }
+    );
+    return response.data;
 };
 
 export const updateCV = async (id: string, cvData: any) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.put(`${API_URL}/cv/${id}`, cvData, {
+        const response = await axios.put(`${API_URL}/CV/${id}`, cvData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -50,10 +72,9 @@ export const updateCV = async (id: string, cvData: any) => {
 
 export const deleteCV = async (id: string) => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.delete(`${API_URL}/cv/${id}`, {
+        const response = await axios.delete(`${API_URL}/CV/${id}`, {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${getToken()}`
             }
         });
         return response.data;

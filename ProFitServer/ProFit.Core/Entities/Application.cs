@@ -14,16 +14,17 @@ namespace ProFit.Core.Entities
         [Key]
         public int Id { get; set; }
 
+        [ForeignKey(nameof(User))]
         public int CandidateId { get; set; }
-        [ForeignKey("CandidateId")]
         public User User { get; set; }
 
+        [ForeignKey(nameof(Job))]
         public int JobId { get; set; }
-        [ForeignKey("JobId")]
         public Job Job { get; set; }
 
+        [ForeignKey(nameof(CV))]
         public int? CVId { get; set; }
-        [ForeignKey("CVId")]
         public CV CV { get; set; }
+        public int Score { get; set; }
     }
 }

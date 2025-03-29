@@ -9,11 +9,12 @@ namespace ProFit.Core.DTOs
     public class CvDTO
     {
         public int Id { get; set; }
-        public string Path { get; set; }
         public int CandidateId { get; set; }
         public int JobId { get; set; }
+        public bool IsGeneral { get; set; }
         public DateTime UploadedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public int Score { get; set; }
+        public string ContentType { get; set; }
+
     }
 }

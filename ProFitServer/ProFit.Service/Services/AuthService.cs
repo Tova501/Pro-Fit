@@ -48,13 +48,8 @@ namespace ProFit.Service.Services
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
-            if (user.Roles.Count > 0)
-            {
-                foreach(var role in user.Roles)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, role.RoleName));
-                }
-            }
+            claims.Add(new Claim(ClaimTypes.Role, user.Role.RoleName));
+            
             var token = new JwtSecurityToken(
              _configuration["Jwt:Issuer"],
             _configuration["Jwt:Audience"],
@@ -84,7 +79,7 @@ namespace ProFit.Service.Services
             var user = await ValidateUser(userDTO.Email, userDTO.Password);
             if(user == null)
             {
-                return Result<AuthenticationResult>.Failure("Invalid username or password.", 403);
+                return Result<AuthenticationResult>.Failure("Invalid email or password.", 403);
             }
             var token = GenerateJwtToken(user);
             var resultUser = _mapper.Map<UserDTO>(user);
@@ -110,14 +105,8 @@ namespace ProFit.Service.Services
             var hashPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
             user.Password = hashPassword;
             var role = await _repository.Roles.GetRoleByNameAsync("User");
-            user.Roles.Add(role);
-
-
-            var generalCV = new CV()
-            {
-                CandidateId = user.Id,
-                IsGeneral = true
-            };
+            user.Role = role;
+            user.RoleId = role.Id;
 
             var result = await _repository.Users.AddAsync(user);
             if (result == null)

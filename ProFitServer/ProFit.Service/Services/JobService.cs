@@ -5,6 +5,7 @@ using ProFit.Core.DTOs;
 using ProFit.Core.Entities;
 using ProFit.Core.IRepositories;
 using ProFit.Core.IServices;
+using ProFit.Core.ResultModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,15 +66,30 @@ namespace ProFit.Service.Services
             return _mapper.Map<JobDTO>(job);
         }
 
-        public async Task<List<CV>> GetCVsByJobId(int id)
+        public async Task<List<Application>> GetApplicationsByJobId(int id)
         {
-            var job = await _repository.Jobs.GetJobWithCVsAsync(id);
-            return job.CVs.ToList();
+            var job = await _repository.Jobs.GetJobWithApplicationsAsync(id);
+            return job.Applications.ToList();
         }
 
-        public Task<JobDTO> UpdateAsync(int id, JobDTO job)
+        public async Task<JobDTO> UpdateAsync(int id, JobDTO jobDto)
         {
-            throw new NotImplementedException();
+            var job = _mapper.Map<Job>(jobDto);
+            var existingJob = await _repository.Jobs.GetByIdAsync(id);
+
+            existingJob.UpdatedAt = DateTime.UtcNow;
+            existingJob.Title = job.Title;
+            existingJob.Description = job.Description;
+            existingJob.Requirements = job.Requirements;
+            existingJob.Skills = job.Skills;
+            existingJob.YearsOfExperienceRequired = job.YearsOfExperienceRequired;
+            existingJob.Location = job.Location;
+            existingJob.Company = job.Company;
+
+            var resultJob = await _repository.Jobs.UpdateAsync(id, existingJob);
+            var resultJobDto = _mapper.Map<JobDTO>(resultJob);
+            await _repository.SaveAsync();
+            return resultJobDto;
         }
 
         public async Task<string> CreateFileAsync(int jobId, int userId, string contentType)
@@ -86,6 +102,16 @@ namespace ProFit.Service.Services
         public async Task<CvDTO> ApplyAsync(int jobId, int userId)
         {
             return await _cvService.AddAsync(jobId, userId);
+        }
+
+        public async Task<Result<bool>> CanManageJob(int jobId, int userId)
+        {
+            var job = await _repository.Jobs.GetByIdAsync(jobId);
+            if (job == null)
+            {
+                return Result<bool>.Failure("Job not found",404);
+            }
+            return Result<bool>.Success(job.RecruiterId == userId); 
         }
     }
 }

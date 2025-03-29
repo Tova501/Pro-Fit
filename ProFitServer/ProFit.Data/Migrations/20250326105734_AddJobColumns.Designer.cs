@@ -12,8 +12,8 @@ using ProFit.Data;
 namespace ProFit.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250320161532_RenameColumnJob")]
-    partial class RenameColumnJob
+    [Migration("20250326105734_AddJobColumns")]
+    partial class AddJobColumns
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,12 +36,8 @@ namespace ProFit.Data.Migrations
                     b.Property<int>("CandidateId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("JobId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<bool>("IsGeneral")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("Score")
                         .HasColumnType("integer");
@@ -51,14 +47,11 @@ namespace ProFit.Data.Migrations
                         .HasColumnName("UpdatedAt");
 
                     b.Property<DateTime>("UploadedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("UploadedAt");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CandidateId");
-
-                    b.HasIndex("JobId");
 
                     b.ToTable("CVs");
                 });
@@ -79,6 +72,10 @@ namespace ProFit.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("RecruiterId")
                         .HasColumnType("integer");
 
@@ -95,6 +92,9 @@ namespace ProFit.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("UpdatedAt");
 
+                    b.Property<int>("YearsOfExperienceRequired")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RecruiterId");
@@ -102,19 +102,32 @@ namespace ProFit.Data.Migrations
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("PermissionRole", b =>
+            modelBuilder.Entity("ProFit.Core.Entities.Application", b =>
                 {
-                    b.Property<int>("PermissionsId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    b.Property<int>("RolesId")
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CVId")
                         .HasColumnType("integer");
 
-                    b.HasKey("PermissionsId", "RolesId");
+                    b.Property<int>("CandidateId")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("RolesId");
+                    b.Property<int>("JobId")
+                        .HasColumnType("integer");
 
-                    b.ToTable("PermissionRole");
+                    b.HasKey("Id");
+
+                    b.HasIndex("CVId");
+
+                    b.HasIndex("CandidateId");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("Applications");
                 });
 
             modelBuilder.Entity("ProFit.Core.Entities.Permission", b =>
@@ -168,6 +181,28 @@ namespace ProFit.Data.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("ProFit.Core.Entities.Skill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("JobId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("Skill");
+                });
+
             modelBuilder.Entity("ProFit.Core.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -198,24 +233,14 @@ namespace ProFit.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("RolesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("CV", b =>
@@ -225,14 +250,6 @@ namespace ProFit.Data.Migrations
                         .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Job", "Job")
-                        .WithMany("CVs")
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Job");
 
                     b.Navigation("User");
                 });
@@ -248,39 +265,59 @@ namespace ProFit.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PermissionRole", b =>
+            modelBuilder.Entity("ProFit.Core.Entities.Application", b =>
                 {
-                    b.HasOne("ProFit.Core.Entities.Permission", null)
+                    b.HasOne("CV", "CV")
                         .WithMany()
-                        .HasForeignKey("PermissionsId")
+                        .HasForeignKey("CVId");
+
+                    b.HasOne("ProFit.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProFit.Core.Entities.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
+                    b.HasOne("Job", "Job")
+                        .WithMany("Applications")
+                        .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CV");
+
+                    b.Navigation("Job");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("RoleUser", b =>
+            modelBuilder.Entity("ProFit.Core.Entities.Skill", b =>
                 {
-                    b.HasOne("ProFit.Core.Entities.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
+                    b.HasOne("Job", null)
+                        .WithMany("Skills")
+                        .HasForeignKey("JobId");
+                });
+
+            modelBuilder.Entity("ProFit.Core.Entities.User", b =>
+                {
+                    b.HasOne("ProFit.Core.Entities.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProFit.Core.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Job", b =>
                 {
-                    b.Navigation("CVs");
+                    b.Navigation("Applications");
+
+                    b.Navigation("Skills");
+                });
+
+            modelBuilder.Entity("ProFit.Core.Entities.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("ProFit.Core.Entities.User", b =>

@@ -9,7 +9,7 @@ using ProFit.Core.IServices;
 
 namespace ProFit.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {

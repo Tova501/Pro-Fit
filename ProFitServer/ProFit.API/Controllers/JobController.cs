@@ -12,7 +12,7 @@ using System.Security.Claims;
 namespace ProFit.API.Controllers
 {
     
-    [Route("api/[controller]")]
+    [Route("api/job")]
     [ApiController]
     public class JobController : ControllerBase
     {

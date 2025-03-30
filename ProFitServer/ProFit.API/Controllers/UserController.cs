@@ -6,7 +6,7 @@ using ProFit.Core.IServices;
 
 namespace ProFit.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {

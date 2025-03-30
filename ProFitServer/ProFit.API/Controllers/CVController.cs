@@ -7,7 +7,7 @@ using ProFit.Core.IServices;
 
 namespace ProFit.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/cv")]
     [ApiController]
     public class CVController : ControllerBase
     {

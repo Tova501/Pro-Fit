@@ -142,7 +142,6 @@ const JobItem: React.FC = () => {
                 </Button>
                 <Button
                     variant="outlined"
-                    color="default"
                     onClick={() => navigate(-1)}
                 >
                     Back

@@ -1,5 +1,7 @@
-import { Container, Box, Card, CardContent, Typography } from '@mui/material';
+import { Container, Box, Card, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import '../styles/Home.css';
 
 const Home = () => {
@@ -11,84 +13,35 @@ const Home = () => {
 
   return (
     <Container>
-      <Box
-        sx={{
-          my: 4,
-          textAlign: 'center',
-        }}
-      >
-        <Typography variant="h2" component="h1" gutterBottom>
-          Welcome to ProFit
+      <Box className="home-container">
+        <Typography className="home-title" component="h1">
+          Empower Your Future
         </Typography>
-        <Typography variant="h5" component="p" color="textSecondary">
-          Your ultimate tool for recruiters and candidates.
+        <Typography className="home-subtitle" component="p">
+          A platform designed to connect top talent with leading organizations. Whether you're building your dream team or taking the next step in your career, we've got you covered.
         </Typography>
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: 4,
-          flexWrap: 'wrap',
-          mt: 4,
-        }}
-      >
-        {/* ריבוע עבור מגייסים */}
-        <Card
-          sx={{
-            width: 300,
-            height: 200,
-            cursor: 'pointer',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            boxShadow: 3,
-            transition: 'transform 0.3s, box-shadow 0.3s',
-            '&:hover': {
-              transform: 'scale(1.05)',
-              boxShadow: 6,
-            },
-          }}
-          onClick={() => handleNavigate('/recruiter')}
-        >
-          <CardContent>
-            <Typography variant="h4" component="h2" gutterBottom>
-              For Recruiters
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              Manage job postings, review candidates, and streamline your hiring process.
-            </Typography>
-          </CardContent>
+      <Box className="home-box-container">
+        {/* Feature for Recruiters */}
+        <Card className="home-card recruiter-card" onClick={() => handleNavigate('/recruiter')}>
+          <WorkOutlineIcon className="home-card-icon" />
+          <Typography className="home-card-title">
+            Build Your Dream Team
+          </Typography>
+          <Typography className="home-card-text">
+            Discover top talent, streamline your hiring process, and achieve your recruitment goals effortlessly.
+          </Typography>
         </Card>
 
-        {/* ריבוע עבור מועמדים */}
-        <Card
-          sx={{
-            width: 300,
-            height: 200,
-            cursor: 'pointer',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            boxShadow: 3,
-            transition: 'transform 0.3s, box-shadow 0.3s',
-            '&:hover': {
-              transform: 'scale(1.05)',
-              boxShadow: 6,
-            },
-          }}
-          onClick={() => handleNavigate('/candidate')}
-        >
-          <CardContent>
-            <Typography variant="h4" component="h2" gutterBottom>
-              For Candidates
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              Upload your CV, find job opportunities, and track your applications.
-            </Typography>
-          </CardContent>
+        {/* Feature for Candidates */}
+        <Card className="home-card candidate-card" onClick={() => handleNavigate('/candidate')}>
+          <PersonOutlineIcon className="home-card-icon" />
+          <Typography className="home-card-title">
+            Unlock Your Potential
+          </Typography>
+          <Typography className="home-card-text">
+            Explore opportunities, showcase your skills, and take the next step in your professional journey.
+          </Typography>
         </Card>
       </Box>
     </Container>

@@ -14,5 +14,10 @@ namespace ProFit.Data.Repositories
             entity.UpdatedAt = DateTime.Now;
             return await base.UpdateAsync(id, entity);
         }
+
+        public async Task<CV?> GetGeneralCvByUserIdAsync(int userId)
+        {
+            return await _context.CVs.FirstOrDefaultAsync(x => x.CandidateId == userId && x.IsGeneral);
+        }
     }
 }

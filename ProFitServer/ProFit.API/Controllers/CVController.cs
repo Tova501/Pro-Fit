@@ -12,11 +12,16 @@ namespace ProFit.API.Controllers
     public class CVController : ControllerBase
     {
         private readonly ICVService _cvService;
+        private readonly IS3Service _s3Service;
         private readonly IMapper _mapper;
-        public CVController(ICVService cVService, IMapper mapper)
+        public CVController(
+            ICVService cVService, 
+            IMapper mapper,
+            IS3Service s3Service)
         {
             _cvService = cVService;
             _mapper = mapper;
+            _s3Service = s3Service;
         }
 
         // GET: api/<CVController>
@@ -39,8 +44,8 @@ namespace ProFit.API.Controllers
         [HttpPost("generate-upload-url")]
         public async Task<IActionResult> GenerateUploadUrl([FromBody] CVPostModel cv)
         {
-            var userId = (int)HttpContext.Items["UserId"];
-            var url = _cvService.GenerateUploadUrl(userId, cv.ContentType);
+            var userId = HttpContext.Items["UserId"].ToString();
+            var url = await _s3Service.GeneratePresignedUrlAsync("general", userId, cv.ContentType);
             if (url == null)
             {
                 return BadRequest();

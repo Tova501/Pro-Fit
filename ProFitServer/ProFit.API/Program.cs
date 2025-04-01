@@ -15,7 +15,7 @@ using ProFit.Service.Validators;
 using FluentValidation;
 using Amazon.S3;
 using Amazon.Extensions.NETCore.Setup;
-using ProFit.API.Middlewares; // äåñôú namespace æä
+using DotNetEnv; // ï¿½ï¿½ï¿½ï¿½ï¿½ namespace ï¿½ï¿½
 
 namespace ProFit.API
 {
@@ -23,17 +23,23 @@ namespace ProFit.API
     {
         public static void Main(string[] args)
         {
+
+            Env.Load("settings.env");
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
+
 
             builder.Services.AddDbContext<DataContext>(options =>
             {
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
             });
 
-            // äåñôú ùéøåúéí ðåñôéí
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             builder.Services.AddScoped<IJobService, JobService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICVService, CVService>();
@@ -45,12 +51,13 @@ namespace ProFit.API
             builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
             builder.Services.AddScoped<IJobRepository, JobRepository>();
             builder.Services.AddScoped<ICVRepository, CVRepository>();
+            builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             //builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-            // äåñôú äâãøåú AWS
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ AWS
             var awsOptions = builder.Configuration.GetAWSOptions();
             builder.Services.AddDefaultAWSOptions(awsOptions);
             builder.Services.AddAWSService<IAmazonS3>();
@@ -58,7 +65,7 @@ namespace ProFit.API
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 
-            // äâãøåú JWT
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ JWT
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -72,9 +79,9 @@ namespace ProFit.API
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = builder.Configuration["JWT:Issuer"],
-                    ValidAudience = builder.Configuration["JWT:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+                    ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                    ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")))
                 };
             });
 

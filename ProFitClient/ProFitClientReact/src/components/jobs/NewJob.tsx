@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
 import { JobPostModel } from '../../models/jobTypes';
@@ -24,7 +23,7 @@ const NewJob = () => {
                 timer: 2000,
                 showConfirmButton: false
             });
-            navigate('recruiter/job');
+            navigate('/recruiter/job');
         } catch (error) {
             console.error('Error adding job:', error);
             swal.fire({

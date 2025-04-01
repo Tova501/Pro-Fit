@@ -12,8 +12,11 @@ namespace ProFit.Service.Validators
     {
         public UserUpdateValidator()
         {
-            RuleFor(user => user.Name)
-                .NotEmpty().WithMessage("Name is required.");
+            RuleFor(user => user.FirstName)
+                .NotEmpty().WithMessage("First-Name is required.");
+
+            RuleFor(user => user.LastName)
+                .NotEmpty().WithMessage("Last-Name is required.");
         }
     }
 }

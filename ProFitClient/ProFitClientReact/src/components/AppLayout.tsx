@@ -4,7 +4,7 @@ import '../styles/AppLayout.css';
 
 const AppLayout = () => {
     return (
-        <div className="app-layout">
+        <div style={{"width":"100vw"}} className="app-layout">
             <Navbar />
             <div className="content">
                 <Outlet />

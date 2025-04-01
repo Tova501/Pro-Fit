@@ -27,34 +27,34 @@ namespace ProFit.Service.Services
             _s3Service = s3Service;
         }
 
-        public async Task<string> GenerateUploadUrl(int userId, string contentType)
-        {
-            var userIdString = userId.ToString();
-            var url = await _s3Service.GeneratePresignedUrlAsync("General", userIdString, contentType);
-            return url;
-        }
         public async Task<CvDTO> ConfirmGeneralCVUpload(int userId, string contentType)
         {
             CV cv = new CV()
             {
                 CandidateId = userId,
                 IsGeneral = true,
-                ContentType = contentType
+                ContentType = contentType,
+                Path = $"general/{userId}"
             };
             var resultCV = await _repository.CVs.AddAsync(cv);
             var cvDto = _mapper.Map<CvDTO>(resultCV);
+            await _repository.SaveAsync();
             return cvDto;
         }
-        public async Task<CvDTO> AddAsync(int jobId, int userId)
+
+        public async Task<CvDTO> ConfirmJobSpecificCVUpload(int jobId, int userId, string contentType)
         {
             CV cv = new CV()
             {
-                Id = 0,
                 CandidateId = userId,
+                IsGeneral = false,
+                ContentType = contentType,
+                Path = $"{jobId}/{userId}"
             };
-
-            var result = await _repository.CVs.AddAsync(cv);
-            return _mapper.Map<CvDTO>(result);
+            var resultCV = await _repository.CVs.AddAsync(cv);
+            await _repository.SaveAsync();
+            var cvDto = _mapper.Map<CvDTO>(resultCV);
+            return cvDto;
         }
 
         public async Task<bool> DeleteAsync(int id)

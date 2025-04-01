@@ -13,9 +13,10 @@ namespace ProFit.Core.IServices
         Task<JobDTO> UpdateAsync(int id, JobDTO job);
         Task DeleteAsync(int id);
         Task<List<Application>> GetApplicationsByJobId(int id);
-        Task<CvDTO> ApplyAsync(int jobId, int userId);
-        Task<string> CreateFileAsync(int jobId, int userId, string contentType);
+        Task<Result<ApplicationDTO>> ApplyAsync(int jobId, int userId);
+        Task<Result<ApplicationDTO>> ApplyWithCVAsync(int jobId, int userId, int cvId);
         public Task<Result<bool>> CanManageJob(int jobId, int userId);
+        public Task<Result<JobDTO>> ChangeStatus(int jobId);
 
     }
 }

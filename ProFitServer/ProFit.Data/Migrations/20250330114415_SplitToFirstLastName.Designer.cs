@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProFit.Data;
@@ -11,9 +12,11 @@ using ProFit.Data;
 namespace ProFit.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250330114415_SplitToFirstLastName")]
+    partial class SplitToFirstLastName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,6 +56,8 @@ namespace ProFit.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CandidateId");
+
                     b.ToTable("CVs");
                 });
 
@@ -74,9 +79,6 @@ namespace ProFit.Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -214,9 +216,6 @@ namespace ProFit.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("HasUploadedGeneralCV")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
@@ -236,6 +235,17 @@ namespace ProFit.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CV", b =>
+                {
+                    b.HasOne("ProFit.Core.Entities.User", "User")
+                        .WithMany("CVs")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Job", b =>
@@ -297,6 +307,8 @@ namespace ProFit.Data.Migrations
 
             modelBuilder.Entity("ProFit.Core.Entities.User", b =>
                 {
+                    b.Navigation("CVs");
+
                     b.Navigation("Jobs");
                 });
 #pragma warning restore 612, 618

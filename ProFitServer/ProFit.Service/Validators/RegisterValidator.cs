@@ -20,8 +20,11 @@ namespace ProFit.Service.Validators
                 .NotEmpty().WithMessage("Password is required.")
                 .MinimumLength(8).WithMessage("Password must be at least 8 characters long.");
 
-            RuleFor(user => user.Name)
-                .NotEmpty().WithMessage("Name is required.");
+            RuleFor(user => user.FirstName)
+                .NotEmpty().WithMessage("First Name is required.");
+
+            RuleFor(user => user.LastName)
+                .NotEmpty().WithMessage("Last Name is required.");
         }
     }
 }

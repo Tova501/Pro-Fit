@@ -1,6 +1,17 @@
 const validationRules = {
-    name: {
-        required: "Username is required",
+    firstName: {
+        required: "First name is required",
+        minLength: {
+            value: 2,
+            message: "First name must be at least 2 characters"
+        }
+    },
+    lastName: {
+        required: "Last name is required",
+        minLength: {
+            value: 2,
+            message: "Last name must be at least 2 characters"
+        }
     },
     email: {
         required: "Email is required",
@@ -17,8 +28,9 @@ const validationRules = {
         }
     },
     confirmPassword: {
-        required: "Confirm Password is required",
-        validate: (value: string, password:string) => value === password || "Passwords do not match"
+        required: "Confirm password is required",
+        validate: (value: string, password: string) =>
+            value === password || "Passwords do not match"
     }
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 import validationRules from '../../validations/LoginValidations';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
@@ -70,6 +71,11 @@ const Login: React.FC = () => {
                         </Button>
                     </Box>
                 </form>
+                <Box mt={2}>
+                    <Typography variant="body2">
+                        Don't have an account? <Link to="/register">Register</Link>
+                    </Typography>
+                </Box>
             </Box>
         </Container>
     );

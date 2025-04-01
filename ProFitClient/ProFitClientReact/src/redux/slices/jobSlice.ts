@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getAllJobs, addJob, updateJob, deleteJob } from '../../services/jobService';
 import { Job, JobPostModel } from '../../models/jobTypes';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
 
 interface JobState {
     jobs: Job[];

@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using FluentValidation.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProFit.API.PostModels;
 using ProFit.Core.DTOs;
 using ProFit.Core.Entities;
 using ProFit.Core.IServices;
+using ProFit.Service.Services;
+using System.Security.Claims;
 
 namespace ProFit.API.Controllers
 {
@@ -13,18 +16,17 @@ namespace ProFit.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IAuthService _authService;
-
+        private readonly IUserService _userService;
         public AuthController(
-            IConfiguration configuration, 
             IAuthService authService,
-            IMapper mapper)
+            IMapper mapper,
+            IUserService userService)
         {
-            _configuration = configuration;
             _authService = authService;
             _mapper = mapper;
+            _userService = userService;
         }
 
 
@@ -38,12 +40,12 @@ namespace ProFit.API.Controllers
 
             if (!authResult.IsSuccess)
             {
-                if(authResult.ErrorCode == 409)
+                if (authResult.ErrorCode == 409)
                 {
                     return Conflict(authResult.ErrorMessage);
                 }
                 return BadRequest(authResult.ErrorMessage);
-        }
+            }
 
             return Ok(authResult.Value);
         }
@@ -63,6 +65,22 @@ namespace ProFit.API.Controllers
             return Ok(authResult.Value);
         }
 
-    }
-}
 
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<ActionResult<UserDTO>> GetUserFromToken()
+        {
+
+            var userId = (int)HttpContext.Items["UserId"];
+
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            return Ok(user);
+        }
+    }
+
+}

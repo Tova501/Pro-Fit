@@ -19,8 +19,8 @@ namespace ProFit.Data.Repositories
 
         public async Task<T> AddAsync(T entity)
         {
-            await _dbSet.AddAsync(entity);
-            return entity;
+            var resultEntity = await _dbSet.AddAsync(entity);
+            return resultEntity.Entity;
         }
 
         public async void DeleteAsync(T entity)

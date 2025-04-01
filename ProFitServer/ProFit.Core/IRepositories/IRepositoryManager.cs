@@ -14,6 +14,7 @@ namespace ProFit.Core.IRepositories
         public ICVRepository CVs { get; }
         public IRoleRepository Roles { get; }
         //public IPermissionRepository Permissions { get; }
+        public IApplicationRepository Applications { get; }
 
         Task<int> SaveAsync();
     }

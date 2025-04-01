@@ -12,6 +12,7 @@ namespace ProFit.Core.DTOs
         public int CandidateId { get; set; }
         public int JobId { get; set; }
         public bool IsGeneral { get; set; }
+        public string Path { get; set; }
         public DateTime UploadedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string ContentType { get; set; }

@@ -21,7 +21,6 @@ namespace ProFit.Core.IServices
         //POST
         public Task<UserDTO> LoginAsync(string email, string password);
         public Task<bool> UpdatePasswordAsync(int id, string email);
-        public Task<bool> UpdateNameAsync(int id, string email);
 
         //DELETE
         public Task<bool> DeleteUserAsync(int id);

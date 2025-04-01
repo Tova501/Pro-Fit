@@ -40,18 +40,6 @@ namespace ProFit.Data.Reposories
             return true;
         }
 
-        public async Task<bool> UpdateNameAsync(int id, string name)
-        {
-            var user = await _context.Users.Where(user => user.Id == id).FirstOrDefaultAsync();
-            if (user == null)
-            {
-                return false;
-            }
-            user.Name = name;
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
         public async Task<bool> DeleteAsync(int id)
         {
             var res = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);

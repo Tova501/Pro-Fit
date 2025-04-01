@@ -21,43 +21,42 @@ namespace ProFit.Service.Services
     public class AuthService : IAuthService
     {
         private readonly IRepositoryManager _repository;
-        private readonly IConfiguration _configuration;
         private readonly IValidator<User> _registerValidator;
         private readonly IMapper _mapper;
         public AuthService(
             IRepositoryManager repository,
-            IConfiguration configuration,
             IValidator<User> registerValidator,
             IMapper mapper)
         {
             _repository = repository;
-            _configuration = configuration;
             _registerValidator = registerValidator;
             _mapper = mapper;
         }
 
         public string GenerateJwtToken(User user)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Name),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
 
             claims.Add(new Claim(ClaimTypes.Role, user.Role.RoleName));
-            
+
             var token = new JwtSecurityToken(
-             _configuration["Jwt:Issuer"],
-            _configuration["Jwt:Audience"],
-            claims,
+                Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+                claims,
                 expires: DateTime.UtcNow.AddHours(2),
                 signingCredentials: credentials
             );
-            
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 import User from '../models/userType';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/authTypes';
 
-const API_URL = 'https://localhost:7131/api/Auth'; 
+const API_URL = 'https://localhost:7131/api/auth'; 
 
 export const login = async (credentials: LoginRequest): Promise<User> => {
     try {
@@ -44,4 +44,26 @@ export const logout = async () => {
 
 export const getToken = () => {
     return localStorage.getItem('token');
+};
+
+export const getUserFromToken = async (): Promise<User | null> => {
+    const token = getToken();
+    if (!token) {
+        return null;
+    }
+
+    try {
+        const response = await axios.get<User>(`${API_URL}/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            console.log("Error fetching user from token:", error.response.data);
+        }
+        localStorage.removeItem('token');
+        throw error;
+    }
 };

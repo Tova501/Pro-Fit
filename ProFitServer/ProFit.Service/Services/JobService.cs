@@ -8,6 +8,7 @@ using ProFit.Core.IServices;
 using ProFit.Core.ResultModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -19,22 +20,17 @@ namespace ProFit.Service.Services
     {
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
-        private readonly IS3Service _s3Service;
         private readonly ICVService _cvService;
 
-
         public JobService(
-            IRepositoryManager repository, 
+            IRepositoryManager repository,
             IMapper mapper,
-            IAmazonS3 s3Client,
-            IS3Service s3Service,
             ICVService cvService)
         {
             _repository = repository;
             _mapper = mapper;
-            _s3Service = s3Service;
             _cvService = cvService;
-        }   
+        }
         public async Task<JobDTO> AddAsync(JobDTO jobDto)
         {
             var job = _mapper.Map<Job>(jobDto);
@@ -50,7 +46,7 @@ namespace ProFit.Service.Services
             {
                 throw new Exception("User Not Found");
             }
-             _repository.Jobs.DeleteAsync(item);
+            _repository.Jobs.DeleteAsync(item);
             await _repository.SaveAsync();
         }
 
@@ -92,16 +88,28 @@ namespace ProFit.Service.Services
             return resultJobDto;
         }
 
-        public async Task<string> CreateFileAsync(int jobId, int userId, string contentType)
+        public async Task<Result<ApplicationDTO>> ApplyAsync(int jobId, int userId)
         {
-            var jobIdString = jobId.ToString();
-            var userIdString = userId.ToString();
-            return await _s3Service.GeneratePresignedUrlAsync(jobIdString, userIdString, contentType);
-        }
+            // Check if the user has a general CV uploaded
+            var generalCv = await _repository.CVs.GetGeneralCvByUserIdAsync(userId);
+            if (generalCv == null)
+            {
+                return Result<ApplicationDTO>.Failure("General CV not found", 404);
+            }
 
-        public async Task<CvDTO> ApplyAsync(int jobId, int userId)
-        {
-            return await _cvService.AddAsync(jobId, userId);
+            // Create a new application entity
+            var application = new Application
+            {
+                CandidateId = userId,
+                JobId = jobId,
+                CVId = generalCv.Id,
+                Score = 0
+            };
+
+            await _repository.Applications.AddAsync(application);
+            await _repository.SaveAsync();
+
+            return Result<ApplicationDTO>.Success(_mapper.Map<ApplicationDTO>(application));
         }
 
         public async Task<Result<bool>> CanManageJob(int jobId, int userId)
@@ -109,9 +117,39 @@ namespace ProFit.Service.Services
             var job = await _repository.Jobs.GetByIdAsync(jobId);
             if (job == null)
             {
-                return Result<bool>.Failure("Job not found",404);
+                return Result<bool>.Failure("Job not found", 404);
             }
-            return Result<bool>.Success(job.RecruiterId == userId); 
+            return Result<bool>.Success(job.RecruiterId == userId);
         }
+
+        public async Task<Result<ApplicationDTO>> ApplyWithCVAsync(int jobId, int userId, int cvId)
+        {
+            var application = new Application
+            {
+                CandidateId = userId,
+                JobId = jobId,
+                CVId = cvId,
+                Score = 0
+            };
+
+            await _repository.Applications.AddAsync(application);
+            await _repository.SaveAsync();
+
+            return Result<ApplicationDTO>.Success(_mapper.Map<ApplicationDTO>(application));
+        }
+
+        public async Task<Result<JobDTO>> ChangeStatus(int jobId)
+        {
+            var existingJob = await _repository.Jobs.GetByIdAsync(jobId);
+            if(existingJob == null)
+            {
+                return Result<JobDTO>.Failure("Job not found", 404);
+            }
+            existingJob.IsActive = !existingJob.IsActive;
+            var resultJob = _repository.Jobs.UpdateAsync(jobId, existingJob);
+            await _repository.SaveAsync();
+            return Result<JobDTO>.Success(_mapper.Map<JobDTO>(resultJob));
+        }
+
     }
 }

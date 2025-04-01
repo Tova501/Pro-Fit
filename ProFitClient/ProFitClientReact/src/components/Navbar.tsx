@@ -2,29 +2,24 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import Auth from './authentication/Auth';
-import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 import { RootState } from '../redux/store';
 import { logoutUser } from '../redux/slices/userSlice';
+import HomeIcon from '@mui/icons-material/Home';
+import WorkIcon from '@mui/icons-material/Work';
+import LoginIcon from '@mui/icons-material/Login';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import '../styles/Navbar.css'; 
 
 const Navbar: React.FC = () => {
   const location = useLocation();
   const isRecruiter = location.pathname.includes('recruiter');
   const isCandidate = location.pathname.includes('candidate');
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-  const [authOpen, setAuthOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-
-  const handleOpenAuth = () => {
-    setAuthOpen(true);
-  };
-
-  const handleCloseAuth = () => {
-    setAuthOpen(false);
-  };
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -32,44 +27,43 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" className="navbar">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             ProFit
           </Typography>
-          <Button color="inherit" component={Link} to={'/'}>
-            Home
+          <Button className="nav-button" component={Link} to={'/'}>
+            <HomeIcon /> Home
           </Button>
           {isLoggedIn && (
             <>
               {isRecruiter && (
-                <Button color="inherit" component={Link} to={'/recruiter/job'}>
-                  Manage Jobs
+                <Button className="nav-button" component={Link} to={'/recruiter/job'}>
+                  <WorkIcon /> Manage Jobs
                 </Button>
               )}
               {isCandidate && (
-                <Button color="inherit" component={Link} to={'/candidate/job'}>
-                  View Jobs
+                <Button className="nav-button" component={Link} to={'/candidate/job'}>
+                  <WorkIcon /> View Jobs
                 </Button>
               )}
-              <Button color="inherit" onClick={handleLogout}>
-                Logout
+              <Button className="nav-button logout-button" onClick={handleLogout}>
+                <ExitToAppIcon /> Logout
               </Button>
             </>
           )}
           {!isLoggedIn && (
             <>
-              <Button color="inherit" onClick={handleOpenAuth}>
-                Login
+              <Button className="nav-button" component={Link} to={'/login'}>
+                <LoginIcon /> Login
               </Button>
-              <Button color="inherit" onClick={handleOpenAuth}>
-                Register
+              <Button className="nav-button" component={Link} to={'/register'}>
+                <PersonAddIcon /> Register
               </Button>
             </>
           )}
         </Toolbar>
       </AppBar>
-      <Auth open={authOpen} onClose={handleCloseAuth} />
     </>
   );
 };

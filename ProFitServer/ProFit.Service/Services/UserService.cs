@@ -66,11 +66,6 @@ namespace ProFit.Service.Services
 
         }
 
-        public async Task<bool> UpdateNameAsync(int id, string email)
-        {
-            return await _userRepository.UpdateNameAsync(id, email);
-        }
-
         public async Task<bool> UpdatePasswordAsync(int id, string email)
         {
             return await _userRepository.UpdatePasswordAsync(id, email);

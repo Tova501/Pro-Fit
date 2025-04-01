@@ -28,4 +28,5 @@ public class Job
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     [Column("UpdatedAt", TypeName = "timestamp with time zone")]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public bool IsActive { get; set; }
 }

@@ -6,7 +6,7 @@ const API_URL = 'https://localhost:7131/api';
 export const getCV = async (id: number) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${API_URL}/CV/${id}`, {
+        const response = await axios.get(`${API_URL}/cv/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -20,7 +20,7 @@ export const getCV = async (id: number) => {
 
 export const generateUploadUrl = async (contentType: string) => {
     const response = await axios.post(
-        `${API_URL}/CV/generate-upload-url`,
+        `${API_URL}/cv/generate-upload-url`,
         { contentType }, 
         {
             headers: {
@@ -44,7 +44,7 @@ export const uploadFileToPresignedUrl = async (presignedUrl: string, file: File)
 export const confirmUpload = async (contentType: string) => {
     console.log("confirmUpload");
     const response = await axios.post(
-        `${API_URL}/CV/confirm-upload`,
+        `${API_URL}/cv/confirm-upload`,
         {  contentType},
         {
             headers: {
@@ -58,7 +58,7 @@ export const confirmUpload = async (contentType: string) => {
 export const updateCV = async (id: string, cvData: any) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.put(`${API_URL}/CV/${id}`, cvData, {
+        const response = await axios.put(`${API_URL}/cv/${id}`, cvData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -72,7 +72,7 @@ export const updateCV = async (id: string, cvData: any) => {
 
 export const deleteCV = async (id: string) => {
     try {
-        const response = await axios.delete(`${API_URL}/CV/${id}`, {
+        const response = await axios.delete(`${API_URL}/cv/${id}`, {
             headers: {
                 Authorization: `Bearer ${getToken()}`
             }

@@ -13,8 +13,10 @@ export interface Job {
     title: string;
     description: string;
     requirements: string;
+    company: string;
     skills: string;
     yearsOfExperienceRequired: number;
     location: string;
     recruiterId: number;
+    isActive: boolean;
 }

@@ -1,46 +1,77 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchJobs } from '../../redux/slices/jobSlice';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../redux/store';
-import JobItem from './JobSmallItem';
-import { Button, CircularProgress, Container, Grid, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { fetchJobs, removeJob } from '../../redux/slices/jobSlice';
+import { Button, Card, CardContent, Typography, Box } from '@mui/material';
+import swal from 'sweetalert2';
+import { useEffect } from 'react';
 
-const RecruiterJobList: React.FC = () => {
+const RecruiterJobList = () => {
+    const navigate = useNavigate();
     const dispatch: AppDispatch = useDispatch();
-    const { jobs, loading, error } = useSelector((state: RootState) => state.job);
-    const userId = useSelector((state: RootState) => state.user).currentUser?.id;
-    const filteredJobs = jobs.filter((job) => job.recruiterId === userId); 
+    const jobs = useSelector((state: RootState) => state.job.jobs);
 
     useEffect(() => {
         dispatch(fetchJobs());
-    }, [dispatch]);
+        console.log("Fetching jobs for recruiter");
+    },[dispatch]);
 
-    if (loading) {
-        return <CircularProgress />;
-    }
-
-    if (error) {
-        return <Typography variant="h6" color="error">{error}</Typography>;
-    }
+    const handleDelete = async (jobId: number) => {
+        try {
+            await dispatch(removeJob(jobId));
+            swal.fire({
+                title: 'Job deleted successfully!',
+                icon: 'success',
+                timer: 2000,
+            });
+        } catch (error) {
+            swal.fire({
+                title: 'Error deleting job',
+                text: 'Please try again later.',
+                icon: 'error',
+            });
+        }
+    };
 
     return (
-        <Container>
-            <Button component={Link} to={'add'}>
-                Add Job
+        <Box>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() => navigate('/recruiter/job/add')}
+                sx={{ mb: 2 }}
+            >
+                Add New Job
             </Button>
-            <Typography variant="h4" component="h1" gutterBottom>
-                Job Listings
-            </Typography>
-            <Grid container spacing={4}>
-                {filteredJobs.map((job) => (
-                    <Grid item xs={12} sm={6} md={4} key={job.id}>
-                        <JobItem job={job} userType='recuiter'/>
-                       
-                    </Grid>
+            <Box display="flex" flexWrap="wrap" gap={2}>
+                {jobs.map((job) => (
+                    <Card key={job.id} sx={{ width: 300 }}>
+                        <CardContent>
+                            <Typography variant="h6">{job.title}</Typography>
+                            <Typography variant="body2" color="textSecondary">
+                                {job.description}
+                            </Typography>
+                        </CardContent>
+                        <Box display="flex" justifyContent="space-between" p={2}>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={() => navigate(`/recruiter/job/edit/${job.id}`)}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                color="error"
+                                onClick={() => handleDelete(job.id)}
+                            >
+                                Delete
+                            </Button>
+                        </Box>
+                    </Card>
                 ))}
-            </Grid>
-        </Container>
+            </Box>
+        </Box>
     );
 };
 

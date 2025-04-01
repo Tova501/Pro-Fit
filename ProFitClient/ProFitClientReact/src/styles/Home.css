@@ -42,3 +42,97 @@
   font-size: 1em;
   color: #666;
 }
+
+/* סגנון כללי לעמוד */
+.home-container {
+  margin-top: 4rem;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.home-title {
+  font-size: 8rem; 
+  font-weight: bold;
+  color: #003d33;
+  margin-bottom: 6rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.home-subtitle {
+  font-size: 1.8rem;
+  color: #555555;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+}
+
+/* סגנון לקופסאות */
+.home-box-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding: 0 20px;
+}
+
+/* כרטיסים */
+.home-card {
+  width: 300px;
+  height: 300px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 25px;
+  color: #ffffff;
+  text-align: center;
+  background: linear-gradient(135deg, #005f73, #0a9396);
+  overflow: hidden;
+  position: relative;
+}
+
+.home-card:hover {
+  transform: translateY(5px);
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.recruiter-card {
+  background: linear-gradient(135deg, #005f73, #0a9396);
+}
+
+.candidate-card {
+  background: linear-gradient(135deg, #007f5f, #94d2bd);
+}
+
+.home-card-icon {
+  font-size: 15rem; 
+  margin-bottom: 1rem;
+  color: black;
+}
+
+.home-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.home-card-text {
+  font-size: 1rem;
+  color: #f0f0f0;
+  line-height: 1.4;
+}
+
+/* אנימציות */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

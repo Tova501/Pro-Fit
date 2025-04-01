@@ -1,15 +1,16 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import { registerUser } from '../../redux/slices/userSlice';
 import validationRules from '../../validations/RegisterValidations';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
 
 interface FormData {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     confirmPassword: string;
@@ -18,34 +19,46 @@ interface FormData {
 const Register: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-    const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>({
-        mode: 'onBlur'
-    });
+    const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>(
+        {
+            mode: 'onBlur'
+        }
+    );
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
         try {
             const resultAction = await dispatch(registerUser(data));
+            console.log("register resultAction", resultAction);
+
             if (registerUser.fulfilled.match(resultAction)) {
                 Swal.fire({
-                    title: "Registration completed successfully.",
+                    title: "Registration successful.",
                     icon: "success",
-                    timer: 3000,
-                    showConfirmButton: false
+                    timer: 2000,
+                    showConfirmButton: false,
                 });
-                navigate('/upload-cv'); // נווט לעמוד העלאת קובץ
-                console.log('Registration successful:', resultAction.payload);
+                navigate("/");
             } else if (registerUser.rejected.match(resultAction)) {
-                console.log('Registration failed:', resultAction.payload);
-                Swal.fire({
-                    title: "Registration failed.",
-                    text: "Please check your data.",
-                    icon: "error"
-                });
+                const errorPayload = resultAction.payload as { statusCode: number; message: string };
+
+                if (errorPayload.statusCode === 409) {
+                    Swal.fire({
+                        title: "User already exists.",
+                        text: "Please use a different email.",
+                        icon: "warning",
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Registration failed.",
+                        text: errorPayload.message || "Something went wrong. Please try again later.",
+                        icon: "error",
+                    });
+                }
             }
-        } catch(error:unknown) {
+        } catch (error) {
             Swal.fire({
-                title: "Registration failed.",
-                text: error instanceof Error ? error.message : "Unknown error occurred",
+                title: "An unexpected error occurred.",
+                text: "Please try again later.",
                 icon: "error",
             });
         }
@@ -53,18 +66,26 @@ const Register: React.FC = () => {
 
     return (
         <Container maxWidth="sm">
-            <Box mt={5} mb={5}>
+            <Box mt={5}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Register
                 </Typography>
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     <TextField
-                        label="Name"
-                        {...register("name", validationRules.name)}
+                        label="First Name"
+                        {...register("firstName", validationRules.firstName)}
                         fullWidth
                         margin="normal"
-                        error={!!errors.name}
-                        helperText={errors.name ? errors.name.message : ''}
+                        error={!!errors.firstName}
+                        helperText={errors.firstName ? errors.firstName.message : ''}
+                    />
+                    <TextField
+                        label="Last Name"
+                        {...register("lastName", validationRules.lastName)}
+                        fullWidth
+                        margin="normal"
+                        error={!!errors.lastName}
+                        helperText={errors.lastName ? errors.lastName.message : ''}
                     />
                     <TextField
                         label="Email"
@@ -102,6 +123,11 @@ const Register: React.FC = () => {
                         </Button>
                     </Box>
                 </form>
+                <Box mt={2}>
+                    <Typography variant="body2">
+                        Already have an account? <Link to="/login">Login</Link>
+                    </Typography>
+                </Box>
             </Box>
         </Container>
     );

@@ -11,6 +11,7 @@ namespace ProFit.Core.IRepositories
 {
     public interface ICVRepository:IRepository<CV>
     {
-       // Task<IEnumerable<CV>> GetCVsWithJobAsync();
+        // Task<IEnumerable<CV>> GetCVsWithJobAsync();
+        public Task<CV?> GetGeneralCvByUserIdAsync(int userId);
     }
 }

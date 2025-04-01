@@ -16,7 +16,9 @@ namespace ProFit.Core.Entities
         [Key]
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; }
@@ -24,8 +26,6 @@ namespace ProFit.Core.Entities
         [PasswordPropertyText]
         public string Password { get; set; }
         public List<Job> Jobs { get; set; } = new List<Job>();
-        public List<CV> CVs { get; set; } = new List<CV>();
-
         [Required]
         [ForeignKey(nameof(Role))]
         public int RoleId { get; set; }
@@ -34,5 +34,6 @@ namespace ProFit.Core.Entities
         public bool IsActive { get; set; } = true;
         [Column("CreatedAt", TypeName = "timestamp with time zone")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public bool HasUploadedGeneralCV { get; set; }
     }
 }

@@ -1,11 +1,11 @@
 // userSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login, register, logout } from '../../services/authService';
+import { login, register, logout, getUserFromToken } from '../../services/authService';
 import { LoginRequest, RegisterRequest } from '../../models/authTypes';
 import User from '../../models/userType';
 
 // Async thunk for login
-export const loginUser = createAsyncThunk('user/login', async (credentials: LoginRequest):Promise<User> => {
+export const loginUser = createAsyncThunk('user/login', async (credentials: LoginRequest): Promise<User> => {
     const user = await login(credentials);
     if (!user) {
         throw new Error('Login failed');
@@ -14,12 +14,35 @@ export const loginUser = createAsyncThunk('user/login', async (credentials: Logi
 });
 
 // Async thunk for registration
-export const registerUser = createAsyncThunk('user/register', async (userData: RegisterRequest):Promise<User> => {
-    const user = await register(userData);
-    if (!user) {
-        throw new Error('Registration failed');
+export const registerUser = createAsyncThunk(
+    'user/register',
+    async (userData: RegisterRequest, { rejectWithValue }) => {
+        try {
+            const user = await register(userData);
+            if (!user) {
+                throw new Error('Registration failed');
+            }
+            return user;
+        } catch (error: any) {
+            if (error.response && error.response.status) {
+                // העברת מספר השגיאה באמצעות rejectWithValue
+                return rejectWithValue({
+                    statusCode: error.response.status,
+                    message: error.response.data?.message || 'An error occurred',
+                });
+            }
+            throw error; // זריקת שגיאה כללית אם אין response
+        }
     }
-    return user;
+);
+
+export const checkAuth = createAsyncThunk('user/checkAuth', async (): Promise<User | null> => {
+    try {
+        const user = await getUserFromToken();
+        return user;
+    } catch (error) {
+        return null;
+    }
 });
 
 // Async thunk for logout
@@ -51,15 +74,33 @@ const userSlice = createSlice({
                 state.error = null; // אפס שגיאות
             })
             .addCase(registerUser.rejected, (state, action) => {
-                state.error = action.error.message; // עדכון שגיאה במקרה של כישלון
+                if (action.payload && (action.payload as any).message) {
+                    state.error = (action.payload as any).message;
+                } else {
+                    state.error = 'An unknown error occurred';
+                }
             })
             .addCase(logoutUser.fulfilled, (state) => {
                 state.currentUser = null; // אפס את המידע על המשתמש
                 state.isLoggedIn = false; // עדכון מצב הכניסה
                 state.error = null; // אפס שגיאות
+            })
+            .addCase(checkAuth.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.currentUser = action.payload;
+                    state.isLoggedIn = true;
+                } else {
+                    state.currentUser = null;
+                    state.isLoggedIn = false;
+                }
+                state.error = null;
+            })
+            .addCase(checkAuth.rejected, (state) => {
+                state.currentUser = null;
+                state.isLoggedIn = false;
             });
     },
 });
 
-export const {} = userSlice.actions;
+export const { } = userSlice.actions;
 export default userSlice.reducer;

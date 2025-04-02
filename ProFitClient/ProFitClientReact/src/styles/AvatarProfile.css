@@ -1,0 +1,61 @@
+.avatar-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 16px; /* Spacing between avatar and other elements */
+}
+
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px; /* Default width */
+    height: 48px; /* Fixed height */
+    font-size: 1.2rem; /* Default font size */
+    border-radius: 24px; /* Ensure it's a circle */
+    background-color: #ccc; /* Default background color */
+    color: white; /* Default text color */
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+    overflow: hidden; /* Ensure content doesn't overflow */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.avatar-container:hover .avatar {
+    width: 150px; /* Expand width on hover */
+    border-radius: 24px; /* Keep the height fixed and rounded */
+}
+
+.avatar-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.avatar-initials {
+    position: absolute;
+    opacity: 1; /* Show initials by default */
+    transition: opacity 0.3s ease; /* Smooth fade-out effect */
+}
+
+.avatar-container:hover .avatar-initials {
+    opacity: 0; /* Hide initials on hover */
+}
+
+.avatar-hover {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 4px;
+    opacity: 0; /* Hide hover content by default */
+    transition: opacity 0.3s ease; /* Smooth fade-in effect */
+    color: white;
+}
+
+.avatar-container:hover .avatar-hover {
+    opacity: 1; /* Show hover content */
+}

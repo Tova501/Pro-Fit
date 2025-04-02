@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-nanoserver-1809 AS base
+WORKDIR /app
+EXPOSE 7131
+
+ENV ASPNETCORE_URLS=http://+:7131
+
+FROM mcr.microsoft.com/dotnet/sdk:9.0-nanoserver-1809 AS build
+ARG configuration=Release
+WORKDIR /src
+COPY ["ProFit.API/ProFit.API.csproj", "ProFit.API/"]
+RUN dotnet restore "ProFit.API\ProFit.API.csproj"
+COPY . .
+WORKDIR "/src/ProFit.API"
+RUN dotnet build "ProFit.API.csproj" -c $configuration -o /app/build
+
+FROM build AS publish
+ARG configuration=Release
+RUN dotnet publish "ProFit.API.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "ProFit.API.dll"]

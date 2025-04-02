@@ -12,7 +12,8 @@ import WorkIcon from '@mui/icons-material/Work';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import '../styles/Navbar.css'; 
+import '../styles/Navbar.css';
+import AvatarProfile from './Avatar';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
@@ -32,6 +33,7 @@ const Navbar: React.FC = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             ProFit
           </Typography>
+
           <Button className="nav-button" component={Link} to={'/'}>
             <HomeIcon /> Home
           </Button>
@@ -50,6 +52,7 @@ const Navbar: React.FC = () => {
               <Button className="nav-button logout-button" onClick={handleLogout}>
                 <ExitToAppIcon /> Logout
               </Button>
+              <AvatarProfile />
             </>
           )}
           {!isLoggedIn && (

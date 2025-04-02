@@ -10,6 +10,7 @@ import CandidateJobList from "./jobs/CandidateJobList";
 import Register from "./authentication/Register";
 import Login from "./authentication/Login";
 import JobItem from "./jobs/JobItem";
+import Profile from "./Profile";
 
 export const router = createBrowserRouter([
     {
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
             { path: '/', element: <Home /> },
             { path: '/login', element: <Login /> },
             { path: '/register', element: <Register /> },
+            { path: '/profile', element: <Profile/>},
             { path: '/recruiter', element: <RecruiterHome /> },
             { path: '/recruiter/job', element: <RecruiterJobList /> },
             { path: 'recruiter/job/add', element: <NewJob /> },

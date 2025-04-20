@@ -14,7 +14,7 @@ namespace ProFit.Data.Reposories
     {
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _context.Users.Include(user => user.Role).FirstOrDefaultAsync(user => user.Email == email);
+            return await _context.Users.Include(user=>user.Role).FirstOrDefaultAsync(user => user.Email == email);
         }
 
         public async Task<User> GetUserByIdAsync(int id)

@@ -15,7 +15,7 @@ using ProFit.Service.Validators;
 using FluentValidation;
 using Amazon.S3;
 using Amazon.Extensions.NETCore.Setup;
-using DotNetEnv; // ����� namespace ��
+using DotNetEnv; 
 
 namespace ProFit.API
 {
@@ -39,7 +39,6 @@ namespace ProFit.API
                 options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
             });
 
-            // ����� ������� ������
             builder.Services.AddScoped<IJobService, JobService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICVService, CVService>();

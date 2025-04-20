@@ -12,8 +12,8 @@ using ProFit.Data;
 namespace ProFit.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250326140249_FixSpellingError")]
-    partial class FixSpellingError
+    [Migration("20250407111745_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,11 +36,16 @@ namespace ProFit.Data.Migrations
                     b.Property<int>("CandidateId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsGeneral")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("Score")
-                        .HasColumnType("integer");
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -50,8 +55,6 @@ namespace ProFit.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CandidateId");
 
                     b.ToTable("CVs");
                 });
@@ -64,6 +67,9 @@ namespace ProFit.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Company")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("CreatedAt");
@@ -71,6 +77,9 @@ namespace ProFit.Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -121,6 +130,9 @@ namespace ProFit.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("JobId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Score")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -193,9 +205,6 @@ namespace ProFit.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Company")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("CreatedAt");
@@ -204,10 +213,17 @@ namespace ProFit.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("HasUploadedGeneralCV")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -223,17 +239,6 @@ namespace ProFit.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("CV", b =>
-                {
-                    b.HasOne("ProFit.Core.Entities.User", "User")
-                        .WithMany("CVs")
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Job", b =>
@@ -295,8 +300,6 @@ namespace ProFit.Data.Migrations
 
             modelBuilder.Entity("ProFit.Core.Entities.User", b =>
                 {
-                    b.Navigation("CVs");
-
                     b.Navigation("Jobs");
                 });
 #pragma warning restore 612, 618

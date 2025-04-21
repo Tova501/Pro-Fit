@@ -12,6 +12,23 @@ namespace ProFit.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.HasAnnotation("Relational:MaxIdentifierLength", 64); // MySQL-specific
+
+            // הגדרת טבלת ההיסטוריה של המיגרציות
+            modelBuilder.Entity<MigrationHistory>()
+                .ToTable("__EFMigrationsHistory")
+                .HasKey(m => m.MigrationId); // הגדרת מפתח ראשי
+        }
+
+        public class MigrationHistory
+        {
+            public string MigrationId { get; set; }
+            public string ProductVersion { get; set; }
+        }
         public DbSet<User> Users { get; set; }
         public DbSet<Job> Jobs { get; set; }
         public DbSet<CV> CVs { get; set; }
@@ -19,10 +36,5 @@ namespace ProFit.Data
         public DbSet<Permission> Permissions { get; set; }
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        { 
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.LogTo(mesege => Console.Write(mesege));
-        }
     }
 }

@@ -24,9 +24,13 @@ public class Job
     [ForeignKey("RecruiterId")]
     public User User { get; set; }
     public List<Application> Applications { get; set; } = new List<Application>();
-    [Column("CreatedAt", TypeName = "timestamp with time zone")]
+    //[Column("CreatedAt", TypeName = "timestamp with time zone")]
+    [Column("CreatedAt", TypeName = "datetime(6)")]
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    [Column("UpdatedAt", TypeName = "timestamp with time zone")]
+    //[Column("UpdatedAt", TypeName = "timestamp with time zone")]
+    [Column("UpdatedAt", TypeName = "datetime(6)")]
+
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; }
 }

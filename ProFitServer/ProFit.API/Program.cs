@@ -36,14 +36,17 @@ namespace ProFit.API
 
             builder.Services.AddDbContext<DataContext>(options =>
             {
-                options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
+                options.UseMySql(
+                    Environment.GetEnvironmentVariable("CONNECTION_STRING"),
+                    new MySqlServerVersion(new Version(8, 0, 23)), // עדכני לגרסה שלך
+                    options => options.MigrationsHistoryTable("__EFMigrationsHistory")
+                );    
+                //options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
             });
 
             builder.Services.AddScoped<IJobService, JobService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICVService, CVService>();
-            //builder.Services.AddScoped<IRoleService, RoleService>();
-            //builder.Services.AddScoped<IPermissionService, PermissionService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IS3Service, S3Service>();
 
@@ -53,10 +56,8 @@ namespace ProFit.API
             builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-            //builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-            // ����� ������ AWS
             var awsOptions = builder.Configuration.GetAWSOptions();
             builder.Services.AddDefaultAWSOptions(awsOptions);
             builder.Services.AddAWSService<IAmazonS3>();
@@ -64,7 +65,6 @@ namespace ProFit.API
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 
-            // ������ JWT
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

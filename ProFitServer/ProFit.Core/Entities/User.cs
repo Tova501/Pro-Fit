@@ -32,7 +32,9 @@ namespace ProFit.Core.Entities
         public Role Role { get; set; }
 
         public bool IsActive { get; set; } = true;
-        [Column("CreatedAt", TypeName = "timestamp with time zone")]
+        //[Column("CreatedAt", TypeName = "timestamp with time zone")]
+        [Column("CreatedAt", TypeName = "datetime(6)")]
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool HasUploadedGeneralCV { get; set; }
     }

@@ -2,7 +2,9 @@ import axios from 'axios';
 import User from '../models/userType';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/authTypes';
 
-const API_URL = 'https://localhost:7131/api/auth'; 
+// const API_URL = 'https://localhost:7131/api/auth'; 
+const API_URL = 'https://pro-fit-g87u.onrender.com/api/auth'; 
+
 
 export const login = async (credentials: LoginRequest): Promise<User> => {
     try {

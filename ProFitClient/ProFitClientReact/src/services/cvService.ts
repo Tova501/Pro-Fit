@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './authService';
 
-const API_URL = 'https://localhost:7131/api';
+const API_URL = 'https://pro-fit-g87u.onrender.com/api';
 
 export const getCV = async (id: number) => {
     try {

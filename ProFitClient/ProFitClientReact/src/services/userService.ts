@@ -2,7 +2,7 @@ import axios from "axios";
 import User from "../models/userType";
 import { getToken } from "./authService";
 
-const API_URL = 'https://localhost:7131/api/user'; 
+const API_URL = 'https://pro-fit-g87u.onrender.com/api/user'; 
 
 export const updateUser = async (user:User) => {
     try {

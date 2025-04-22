@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken } from './authService';
 import { JobPostModel } from '../models/jobTypes';
 
-const API_URL = 'https://localhost:7131/api/job'; 
+const API_URL = 'https://pro-fit-g87u.onrender.com/api/job'; 
 
 // קבלת כל המשרות
 export const getAllJobs = async () => {

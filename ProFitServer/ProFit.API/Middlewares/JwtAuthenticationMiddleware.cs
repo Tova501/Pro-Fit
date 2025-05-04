@@ -47,7 +47,6 @@ public class JwtAuthenticationMiddleware
                 context.Response.StatusCode = 401; // Unauthorized
                 return;
             }
-
             context.Items["UserId"] = user.Id;
         }
         catch

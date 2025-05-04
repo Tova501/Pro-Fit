@@ -1,6 +1,7 @@
 import React from 'react';
+//import { GoogleLogin } from '@react-oauth/google';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
 import validationRules from '../../validations/LoginValidations';
 import { useDispatch } from 'react-redux';
@@ -38,6 +39,21 @@ const Login: React.FC = () => {
                 icon: "error",
             });
         }
+    };
+    const handleGoogleSignIn = async (token: string) => {
+        // try {
+            
+        //     const { user, token: jwtToken } = await dispatch(connectWithGoogle({ token })).unwrap() as { user: User; token: string };
+
+        //     localStorage.setItem('token', jwtToken);
+        //     console.log("Google Sign-In Success:", user);
+        //     dispatch(setCurrentUser(user));
+        //     navigate('/');
+           
+        // } catch (error: any) {
+        //     console.error('Google Sign-In Error:', error.response?.data || error.message);
+        //     setErrorMessage(error.response?.data?.message || 'Failed to sign in with Google. Please try again.');
+        // }
     };
 
     return (
@@ -77,6 +93,39 @@ const Login: React.FC = () => {
                     </Typography>
                 </Box>
             </Box>
+            {/* <Divider sx={{ my: 4 }}>
+                <Typography variant="body2" color="text.secondary">
+                    OR
+                </Typography>
+            </Divider>
+            <Box
+                sx={{
+                    width: "100%",  
+                    display: "flex",
+                    justifyContent: "center",
+                    mt: 2, // מרווח עליון
+                }}
+            >
+                <GoogleLogin
+                    locale='en'
+                    text="signin_with"
+                    onSuccess={(credentialResponse) => {
+                        console.log('Google Sign-In Success:', credentialResponse);
+                        const token = credentialResponse.credential;
+                        if (token) {
+                            handleGoogleSignIn(token);
+                        } else {
+                            console.error('Google Sign-In failed: Token is undefined');
+                        }
+                    }}
+                    onError={() => {
+                        console.error('Google Sign-In Failed');
+                    }}
+                    useOneTap
+                    theme="outline" // עיצוב כפתור
+                    size="large"
+                />
+            </Box> */}
         </Container>
     );
 };

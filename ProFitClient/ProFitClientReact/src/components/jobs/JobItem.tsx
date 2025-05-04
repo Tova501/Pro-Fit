@@ -6,7 +6,7 @@ import { Button, Card, CardContent, Typography, Box } from '@mui/material';
 import swal from 'sweetalert2';
 import { applyToJob, applyToJobWithCV, getPresignedUrlForCV } from '../../services/jobService';
 import { Job } from '../../models/jobTypes';
-import User from '../../models/userType';
+import User from '../../models/userTypes';
 
 const JobItem: React.FC = () => {
     const { id } = useParams<{ id: string }>();

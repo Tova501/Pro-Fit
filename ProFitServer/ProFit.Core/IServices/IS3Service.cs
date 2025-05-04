@@ -9,6 +9,10 @@ namespace ProFit.Core.IServices
     public interface IS3Service
     {
         public Task<string> GeneratePresignedUrlAsync(string folderName, string fileName, string contentType);
-        public Task<string> GetDownloadUrlAsync(string fileName);
+
+        public Task<string> GererateDownloadUrlAsync(string folderName, string fileName);
+
+        public Task<string> GeneratePresignedViewUrlAsync(string key, string contentType);
+
     }
 }

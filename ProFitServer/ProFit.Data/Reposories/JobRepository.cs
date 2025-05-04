@@ -18,12 +18,17 @@ namespace ProFit.Data.Reposories
         {
         }
 
+
         public async Task<Job?> GetJobWithApplicationsAsync(int jobId)
         {
             return await _context.Jobs
+                .Include(j => j.Applications) // טוען את היישומים
+                    .ThenInclude(a => a.User) // טוען את ה-User עבור כל יישום
                 .Include(j => j.Applications)
+                    .ThenInclude(a => a.CV) // טוען את ה-CV עבור כל יישום
                 .FirstOrDefaultAsync(j => j.Id == jobId);
         }
+        
 
         public async override Task<Job> UpdateAsync(int id, Job entity)
         {

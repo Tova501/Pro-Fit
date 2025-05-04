@@ -13,6 +13,7 @@ namespace ProFit.Data.Reposories
     {
         public ApplicationRepository(DataContext context) : base(context)
         {
+
         }
     }
 }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import User from '../models/userType';
+import User from '../models/userTypes';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/authTypes';
 
 // const API_URL = 'https://localhost:7131/api/auth'; 

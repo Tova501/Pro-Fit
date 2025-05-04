@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { updateCV } from '../services/cvService';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/store';
 import { TextField, Button, Container, Typography, Grid, Paper } from '@mui/material';
-import { Edit as EditIcon, Save as SaveIcon, UploadFile as UploadFileIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Save as SaveIcon, UploadFile as UploadFileIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
 import swal from 'sweetalert2';
+import { updateUser } from '../redux/slices/userSlice';
+import { uploadGeneralCV } from '../redux/slices/cvSlice';
+import CVFile from './CVFile';
+import { getGeneralCV } from '../services/cvService';
+import CV from '../models/cvType';
 
 const Profile = () => {
+    const dispatch: AppDispatch = useDispatch();
     const user = useSelector((state: RootState) => state.user.currentUser);
 
     const [formData, setFormData] = useState({
@@ -16,7 +21,7 @@ const Profile = () => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [file, setFile] = useState<File | null>(null);
-
+    const [generalCV, setGeneralCV] = useState<CV | null>(null);
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             setFile(event.target.files[0]);
@@ -34,18 +39,34 @@ const Profile = () => {
         }
 
         try {
-            await updateCV(user?.id.toString() || '', file);
-            swal.fire({
-                title: 'CV updated successfully!',
-                icon: 'success',
-                timer: 2000,
-            });
+            const resultAction = await dispatch(uploadGeneralCV({ file }));
+            if (uploadGeneralCV.fulfilled.match(resultAction)) {
+                swal.fire({
+                    title: 'CV uploaded successfully!',
+                    icon: 'success',
+                    timer: 2000,
+                });
+                setFile(null); // Reset the file input
+            } else {
+                swal.fire({
+                    title: 'Error uploading CV',
+                    text: typeof resultAction.payload === 'string' ? resultAction.payload : 'Please try again later.',
+                    icon: 'error',
+                });
+            }
         } catch (error) {
             swal.fire({
-                title: 'Error updating CV',
+                title: 'Error uploading CV',
                 text: 'Please try again later.',
                 icon: 'error',
             });
+        }
+    };
+
+    const handleViewCV = async () => {
+        const cvId = await getGeneralCV();
+        if (cvId) {
+            setGeneralCV(cvId);
         }
     };
 
@@ -55,8 +76,7 @@ const Profile = () => {
 
     const handleSaveChanges = async () => {
         try {
-            // Update user details (you can add a service call here if needed)
-            console.log('Updated user details:', formData);
+            await dispatch(updateUser(formData));
             swal.fire({
                 title: 'Profile updated successfully!',
                 icon: 'success',
@@ -136,28 +156,70 @@ const Profile = () => {
             </Paper>
             <Paper elevation={3} sx={{ padding: 3, marginTop: 5 }}>
                 <Typography variant="h5" gutterBottom>
-                    Upload Default CV
+                    Default CV
                 </Typography>
-                <input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    onChange={handleFileChange}
-                    style={{ marginBottom: '1rem' }}
-                />
-                {file && (
-                    <Typography variant="body2" color="textSecondary">
-                        Selected file: {file.name}
-                    </Typography>
+                {user?.hasUploadedGeneralCV ? (
+                    <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<VisibilityIcon />}
+                            onClick={handleViewCV}
+                            fullWidth
+                        >
+                            View CV
+                        </Button>
+                        {generalCV && (
+                            <CVFile cvId={generalCV.id} />
+                        )}
+                        <Typography variant="h6" gutterBottom sx={{ marginTop: '1rem' }}>
+                            Update CV
+                        </Typography>
+                        <input
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            onChange={handleFileChange}
+                            style={{ marginBottom: '1rem' }}
+                        />
+                        {file && (
+                            <Typography variant="body2" color="textSecondary">
+                                Selected file: {file.name}
+                            </Typography>
+                        )}
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            startIcon={<UploadFileIcon />}
+                            onClick={handleUploadCV}
+                            fullWidth
+                        >
+                            Upload New CV
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <input
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            onChange={handleFileChange}
+                            style={{ marginBottom: '1rem' }}
+                        />
+                        {file && (
+                            <Typography variant="body2" color="textSecondary">
+                                Selected file: {file.name}
+                            </Typography>
+                        )}
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            startIcon={<UploadFileIcon />}
+                            onClick={handleUploadCV}
+                            fullWidth
+                        >
+                            Upload CV
+                        </Button>
+                    </>
                 )}
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<UploadFileIcon />}
-                    onClick={handleUploadCV}
-                    fullWidth
-                >
-                    Upload CV
-                </Button>
             </Paper>
         </Container>
     );

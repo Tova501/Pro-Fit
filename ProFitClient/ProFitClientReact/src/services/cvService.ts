@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { getToken } from './authService';
+import store from '../redux/store';
 
 const API_URL = 'https://pro-fit-g87u.onrender.com/api';
+//const API_URL = 'https://localhost:7131/api';
 
 export const getCV = async (id: number) => {
     try {
@@ -29,7 +31,21 @@ export const generateUploadUrl = async (contentType: string) => {
             },
         }
     );
-    return response.data.presignedUrl.result;
+    console.log(response.data);
+    return response.data.presignedUrl || response.data;
+};
+
+export const generateViewUrl = async (cvId:number) => {
+    const response = await axios.post(
+        `${API_URL}/cv/generate-view-url/${cvId}`,
+        {
+            headers: {
+                Authorization: `Bearer ${getToken()}`,
+            },
+        }
+    );
+    console.log(response.data);
+    return response.data.presignedUrl || response.data;
 };
 
 export const uploadFileToPresignedUrl = async (presignedUrl: string, file: File) => {
@@ -83,3 +99,19 @@ export const deleteCV = async (id: string) => {
         throw error;
     }
 };
+
+export const getGeneralCV = async () => {
+    try {
+        const userId = store.getState().user.currentUser?.id;
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/cv/general/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching general CV:', error);
+        throw error;
+    }
+}

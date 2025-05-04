@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import User from '../models/userType';
+import User from '../models/userTypes';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -40,7 +40,7 @@ const AvatarProfile = () => {
                 sx={{
                     bgcolor: user && user.firstName && user.lastName
                         ? stringToColor(`${user.firstName} ${user.lastName}`)
-                        : '#ccc',
+                        : '#ccc', border: '1px solid white'
                 }}
             >
                 <Box className="avatar-content">

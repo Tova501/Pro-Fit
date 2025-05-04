@@ -14,7 +14,7 @@ const RecruiterJobList = () => {
     useEffect(() => {
         dispatch(fetchJobs());
         console.log("Fetching jobs for recruiter");
-    },[dispatch]);
+    }, [dispatch]);
 
     const handleDelete = async (jobId: number) => {
         try {
@@ -53,6 +53,13 @@ const RecruiterJobList = () => {
                             </Typography>
                         </CardContent>
                         <Box display="flex" justifyContent="space-between" p={2}>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={() => navigate(`/recruiter/job/${job.id}/applications`)}
+                            >
+                                Applications
+                            </Button>
                             <Button
                                 variant="outlined"
                                 color="primary"

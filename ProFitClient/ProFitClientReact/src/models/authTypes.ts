@@ -1,4 +1,4 @@
-import User from './userType';
+import User from './userTypes';
 
 export interface LoginRequest {
     email: string;

@@ -1,30 +1,31 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { Button, Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent, Typography, Box, Tooltip, IconButton, Alert } from '@mui/material';
 import swal from 'sweetalert2';
 import { applyToJob, applyToJobWithCV, getPresignedUrlForCV } from '../../services/jobService';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchJobs } from '../../redux/slices/jobSlice';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import UploadCV from '../UploadCV';
 
 const CandidateJobList = () => {
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
     const jobs = useSelector((state: RootState) => state.job.jobs);
     const user = useSelector((state: RootState) => state.user.currentUser);
     const dispatch = useDispatch<AppDispatch>();
+    const [openUploadCV, setOpenUploadCV] = useState(false);
 
     useEffect(() => {
         dispatch(fetchJobs());
-        console.log("disppatch jobs");
     }, [dispatch]);
 
     const handleApply = async (jobId: number) => {
         if (!user?.hasUploadedGeneralCV) {
-            swal.fire({
-                title: 'Error',
-                text: 'You must upload a general CV before applying.',
-                icon: 'error',
-            });
+            setErrorMessage("You must upload a CV before applying for jobs.");
             return;
         }
 
@@ -36,39 +37,16 @@ const CandidateJobList = () => {
                 timer: 2000,
             });
         } catch (error) {
-            swal.fire({
-                title: 'Error',
-                text: 'Failed to apply for the job. Please try again later.',
-                icon: 'error',
-            });
+            setErrorMessage("Error applying to job. Please try again later.");
         }
     };
 
-    const handleApplyWithCV = async (jobId: number) => {
+    const handleApplyWithCV = async (jobId: number, file: File) => {
         try {
-            const { value: file } = await swal.fire({
-                title: 'Upload your CV',
-                input: 'file',
-                inputAttributes: {
-                    accept: '.pdf,.doc,.docx',
-                    'aria-label': 'Upload your CV',
-                },
-                showCancelButton: true,
-            });
-
-            if (!file) {
-                swal.fire({
-                    title: 'No file selected',
-                    text: 'You must select a file to apply with CV.',
-                    icon: 'warning',
-                });
-                return;
-            }
 
             const contentType = file.type;
             const presignedUrl = await getPresignedUrlForCV(jobId, contentType);
 
-            // Upload the file to S3 using the presigned URL
             await fetch(presignedUrl, {
                 method: 'PUT',
                 body: file,
@@ -84,47 +62,50 @@ const CandidateJobList = () => {
                 timer: 2000,
             });
         } catch (error) {
-            swal.fire({
-                title: 'Error',
-                text: 'Failed to apply with CV. Please try again later.',
-                icon: 'error',
-            });
+            setErrorMessage("Error applying to job. Please try again later.");
         }
     };
 
     return (
         <Box display="flex" flexWrap="wrap" gap={2}>
             {jobs.map((job) => (
-                <Card key={job.id} sx={{ width: 300 }}>
+                <Card key={job.id} sx={{ width: 300, boxShadow: 3, borderRadius: 2 }}>
                     <CardContent>
-                        <Typography variant="h6">{job.title}</Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{job.title}</Typography>
                         <Typography variant="body2" color="textSecondary">
                             {job.description}
                         </Typography>
                     </CardContent>
-                    <Box display="flex" flexDirection="column" gap={1} p={2}>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            onClick={() => navigate(`/candidate/job/${job.id}`)}
-                        >
-                            View
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => handleApply(job.id)}
-                        >
-                            Apply
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleApplyWithCV(job.id)}
-                        >
-                            Apply with CV
-                        </Button>
+                    <Box display="flex" justifyContent="flex-start" p={2}>
+                        <Tooltip title="View Job" arrow>
+                            <IconButton onClick={() => navigate(`/candidate/job/${job.id}`)}>
+                                <VisibilityIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Apply" arrow>
+                            <IconButton onClick={() => handleApply(job.id)}>
+                                <AddCircleIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip
+                            onClick={() => setOpenUploadCV(true)} 
+                            title="Apply with CV" 
+                            arrow>
+                            <IconButton>
+                                <UploadFileIcon />
+                                <UploadCV
+                                    onUpload={(file: File) => handleApplyWithCV(job.id, file)}
+                                    open={openUploadCV}
+                                    onClose={() => setOpenUploadCV(false)}
+                                />
+                            </IconButton>
+                        </Tooltip>
                     </Box>
+                    {errorMessage && (
+                        <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }} icon={<AlertCircle size={20} />}>
+                            {errorMessage}
+                        </Alert>
+                    )}
                 </Card>
             ))}
         </Box>

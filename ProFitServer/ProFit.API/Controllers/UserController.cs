@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProFit.API.PutModels;
 using ProFit.Core.DTOs;
 using ProFit.Core.IServices;
 
@@ -37,9 +38,20 @@ namespace ProFit.API.Controllers
         }
 
         // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPut("{id}/personal-details")]
+        public async Task<ActionResult<UserDTO>> UpdatePersonalDetails(int id, [FromBody]UserPutModel user)
         {
+            var userDTO = new UserDTO
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+            };
+            var result = await _userService.UpdatePersonalDetailsAsync(id, userDTO);
+            if(result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
         // DELETE api/<UserController>/5

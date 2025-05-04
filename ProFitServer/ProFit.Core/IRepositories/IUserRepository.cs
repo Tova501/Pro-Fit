@@ -1,4 +1,5 @@
-﻿using ProFit.Core.Entities;
+﻿using ProFit.Core.DTOs;
+using ProFit.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,5 @@ namespace ProFit.Core.IRepositories
     {
         public Task<User> GetUserByEmailAsync(string email);
         public Task<User> LoginAsync(string email, string password);
-        public Task<bool> UpdatePasswordAsync(int id, string password);
     }
 }

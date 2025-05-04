@@ -62,10 +62,10 @@ namespace ProFit.Service.Services
             return _mapper.Map<JobDTO>(job);
         }
 
-        public async Task<List<Application>> GetApplicationsByJobId(int id)
+        public async Task<List<ApplicationDTO>> GetApplicationsByJobId(int id)
         {
             var job = await _repository.Jobs.GetJobWithApplicationsAsync(id);
-            return job.Applications.ToList();
+            return _mapper.Map<List<ApplicationDTO>>(job?.Applications);
         }
 
         public async Task<JobDTO> UpdateAsync(int id, JobDTO jobDto)

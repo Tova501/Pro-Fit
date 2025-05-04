@@ -4,6 +4,7 @@ using ProFit.Core.DTOs;
 using ProFit.Core.Entities;
 using ProFit.Core.IRepositories;
 using ProFit.Core.IServices;
+using ProFit.Core.ResultModels;
 using ProFit.Service.Validators;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace ProFit.Service.Services
 {
     public class UserService : IUserService
     {
+        readonly IRepositoryManager _repository;
         readonly IUserRepository _userRepository;
         readonly IMapper _mapper;
-        public UserService(IMapper mapper, IUserRepository userRepository)
+        public UserService(IRepositoryManager repository, IMapper mapper, IUserRepository userRepository)
         {
+            _repository = repository;
             _mapper = mapper;
             _userRepository = userRepository;
         }
@@ -66,9 +69,16 @@ namespace ProFit.Service.Services
 
         }
 
-        public async Task<bool> UpdatePasswordAsync(int id, string email)
+        public async Task<UserDTO> UpdatePersonalDetailsAsync(int id, UserDTO user)
         {
-            return await _userRepository.UpdatePasswordAsync(id, email);
+            var existingUser = await _repository.Users.GetByIdAsync(id);
+            existingUser.FirstName = user.FirstName;
+            existingUser.LastName = user.LastName;
+            var result = await _repository.Users.UpdateAsync(id, existingUser);
+            
+            await _repository.SaveAsync();
+            var resultDTO = _mapper.Map<UserDTO>(result);
+            return resultDTO;
         }
 
     }

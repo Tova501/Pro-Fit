@@ -27,20 +27,47 @@ namespace ProFit.Service.Services
             _s3Service = s3Service;
         }
 
+        public async Task<CvDTO> GetGeneralCVByUserId(int userId)
+        {
+            var result = await _repository.CVs.GetGeneralCvByUserIdAsync(userId);
+            return _mapper.Map<CvDTO>(result);
+        }
+
+
         public async Task<CvDTO> ConfirmGeneralCVUpload(int userId, string contentType)
         {
-            CV cv = new CV()
+            try
             {
-                CandidateId = userId,
-                IsGeneral = true,
-                ContentType = contentType,
-                Path = $"general/{userId}"
-            };
-            var resultCV = await _repository.CVs.AddAsync(cv);
-            var cvDto = _mapper.Map<CvDTO>(resultCV);
-            await _repository.SaveAsync();
-            return cvDto;
+                var user = await _repository.Users.GetByIdAsync(userId);
+                user.HasUploadedGeneralCV = true;
+                await _repository.Users.UpdateAsync(userId, user);
+
+                CV cv = new CV()
+                {
+                    CandidateId = userId,
+                    IsGeneral = true,
+                    ContentType = contentType,
+                    Path = $"general/{userId}",
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                var resultCV = await _repository.CVs.AddAsync(cv);
+                await _repository.SaveAsync();
+
+                var cvDto = _mapper.Map<CvDTO>(resultCV);
+                return cvDto;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // טיפול בשגיאות עדכון מסד נתונים
+                throw new Exception("Database update error: " + dbEx.InnerException?.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while saving CV: " + ex.Message);
+            }
         }
+
 
         public async Task<CvDTO> ConfirmJobSpecificCVUpload(int jobId, int userId, string contentType)
         {
@@ -77,13 +104,24 @@ namespace ProFit.Service.Services
         
         public async Task<CvDTO> GetByIdAsync(int id)
         {
-            var item = _repository.CVs.GetByIdAsync(id);
+            var item = await _repository.CVs.GetByIdAsync(id);
             return _mapper.Map<CvDTO>(item);
         }
 
         public async Task<CvDTO> UpdateAsync(int id, MemoryStream stream)
         {
             throw new Exception("Not Implemnted");
+        }
+
+        public async Task<string> GetViewUrlByIdAsync(int id)
+        {
+            var cv = await _repository.CVs.GetByIdAsync(id);
+            if(cv == null)
+            {
+                throw new Exception("Not Fount");
+            }
+            var url = await _s3Service.GeneratePresignedViewUrlAsync(cv.Path, cv.ContentType);
+            return url;
         }
     }
 }

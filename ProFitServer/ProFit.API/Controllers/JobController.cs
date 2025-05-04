@@ -54,49 +54,56 @@ namespace ProFit.API.Controllers
         [HttpPost]
         public async Task<ActionResult<JobDTO>> Post([FromBody] JobPostModel jobPost)
         {
-            var userId = (int)HttpContext.Items["UserId"];
-            var jobDTO = _mapper.Map<JobDTO>(jobPost);
-            jobDTO.RecruiterId = userId;
-            var result = await _jobService.AddAsync(jobDTO);
-            if (result == null)
+            if (HttpContext.Items["UserId"] is int userId)
             {
-                return BadRequest();
+                var jobDTO = _mapper.Map<JobDTO>(jobPost);
+                jobDTO.RecruiterId = userId;
+                var result = await _jobService.AddAsync(jobDTO);
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(result);
             }
-            return Ok(result);
+            else
+            {
+                return Unauthorized();
+            }
         }
 
         // PUT api/<JobController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult<JobDTO>> Put(int id, [FromBody] JobPutModel jobPut)
         {
-            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdString == null)
+            if (HttpContext.Items["UserId"] is int userId)
+            {
+                var authorizationResult = await _jobService.CanManageJob(id, userId);
+                if (!authorizationResult.IsSuccess)
+                {
+                    return NotFound();
+                }
+                if (!authorizationResult.Value)
+                {
+                    return Unauthorized();
+                }
+                var job = _mapper.Map<JobDTO>(jobPut);
+                var resultJob = await _jobService.UpdateAsync(id, job);
+                return Ok(resultJob);
+            }
+            else
             {
                 return Unauthorized();
             }
-            if (!int.TryParse(userIdString, out int userId))
-            {
-                return BadRequest("Invalid user ID");
-            }
-            var authorizationResult = await _jobService.CanManageJob(id, userId);
-            if (!authorizationResult.IsSuccess)
-            {
-                return NotFound();
-            }
-            if (!authorizationResult.Value)
-            {
-                return Unauthorized();
-            }
-            var job = _mapper.Map<JobDTO>(jobPut);
-
-            var resultJob = await _jobService.UpdateAsync(id, job);
-            return Ok(resultJob);
         }
 
         [HttpPost("{id}/CreatePresignedUrlForCV")]
         public async Task<ActionResult<string>> CreatePresignedUrlForCV(int id, [FromBody] CVPostModel cv)
         {
-            var userId = HttpContext.Items["UserId"].ToString();
+            var userId = HttpContext.Items["UserId"]?.ToString();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
 
             var presignedUrl = await _s3Service.GeneratePresignedUrlAsync(id.ToString(), userId, cv.ContentType);
             if (presignedUrl == null)
@@ -110,47 +117,75 @@ namespace ProFit.API.Controllers
         [HttpPost("{id}/Apply")]
         public async Task<ActionResult<ApplicationDTO>> Apply(int id)
         {
-            var userId = (int)HttpContext.Items["UserId"];
-            var application = await _jobService.ApplyAsync(id, userId);
-            if (application == null)
+            if (HttpContext.Items["UserId"] is int userId)
             {
-                return BadRequest();
+                var application = await _jobService.ApplyAsync(id, userId);
+                if (application == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(application);
             }
-            return Ok(application);
+            else
+            {
+                return Unauthorized();
+            }
         }
 
 
         [HttpPost("{id}/ConfirmCVUploadAndApply")]
         public async Task<ActionResult<CvDTO>> ConfirmCVUploadAndApply(int id, [FromBody] CVPostModel cv)
         {
-            var userId = (int)HttpContext.Items["UserId"];
-
-            var cvResult = await _cvService.ConfirmJobSpecificCVUpload(id, userId, cv.ContentType);
-            if (cvResult == null)
+            if (HttpContext.Items["UserId"] is int userId)
             {
-                return BadRequest();
-            }
 
-            var applicationResult = await _jobService.ApplyWithCVAsync(id, userId, cvResult.Id);
-            if (applicationResult == null)
+                var cvResult = await _cvService.ConfirmJobSpecificCVUpload(id, userId, cv.ContentType);
+                if (cvResult == null)
+                {
+                    return BadRequest();
+                }
+
+                var applicationResult = await _jobService.ApplyWithCVAsync(id, userId, cvResult.Id);
+                if (applicationResult == null)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(applicationResult);
+            }
+            else
             {
-                return BadRequest();
+                return Unauthorized();
             }
-
-            return Ok(applicationResult);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> delete(int id)
         {
-            try
+            if (HttpContext.Items["UserId"] is int userId)
             {
-                await _jobService.DeleteAsync(id);
-                return Ok(true);
+                var authorizationResult = await _jobService.CanManageJob(id, userId);
+                if (!authorizationResult.IsSuccess)
+                {
+                    return NotFound();
+                }
+                if (!authorizationResult.Value)
+                {
+                    return Unauthorized();
+                }
+                try
+                {
+                    await _jobService.DeleteAsync(id);
+                    return Ok(true);
+                }
+                catch
+                {
+                    return NotFound();
+                }
             }
-            catch
+            else
             {
-                return NotFound();
+                return Unauthorized();
             }
         }
 
@@ -158,18 +193,79 @@ namespace ProFit.API.Controllers
         public async Task<ActionResult<JobDTO>> UpdateStatus(int id)
         {
             var result = await _jobService.ChangeStatus(id);
-            if(result.IsSuccess)
+            if (result.IsSuccess)
             {
                 return Ok(result.Value);
             }
             else
             {
-                if(result.ErrorCode == 404)
+                if (result.ErrorCode == 404)
                 {
                     return NotFound();
                 }
                 return BadRequest();
             }
         }
+
+        [HttpGet("{id}/applications")]
+        public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetJobApplications(int id)
+        {
+            if (HttpContext.Items["UserId"] is int userId)
+            {
+                var authorizationResult = await _jobService.CanManageJob(id, userId);
+                if (!authorizationResult.IsSuccess)
+                {
+                    return NotFound();
+                }
+                if (!authorizationResult.Value)
+                {
+                    return Unauthorized();
+                }
+                try
+                {
+                    var result = await _jobService.GetApplicationsByJobId(id);
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        [HttpGet("{id}/applications/{applicationId}/presignedUrl")]
+        public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetViewPresigenedUrl(int id)
+        {
+            if (HttpContext.Items["UserId"] is int userId)
+            {
+                var authorizationResult = await _jobService.CanManageJob(id, userId);
+                if (!authorizationResult.IsSuccess)
+                {
+                    return NotFound();
+                }
+                if (!authorizationResult.Value)
+                {
+                    return Unauthorized();
+                }
+                try
+                {
+                    var result = await _jobService.GetApplicationsByJobId(id);
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
     }
 }
+

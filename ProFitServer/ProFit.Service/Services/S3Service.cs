@@ -1,16 +1,14 @@
 ﻿using Amazon.S3.Model;
 using Amazon.S3;
 using Microsoft.Extensions.Configuration;
-using ProFit.Core.IServices;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using ProFit.Core.IServices;
 
 namespace ProFit.Service.Services
 {
-    public class S3Service:IS3Service
+    public class S3Service : IS3Service
     {
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucketName;
@@ -32,26 +30,15 @@ namespace ProFit.Service.Services
         public async Task<string> GeneratePresignedUrlAsync(string folderName, string fileName, string contentType)
         {
             var key = $"{folderName}/{fileName}";
-            var listRequest = new ListObjectsV2Request
+
+            var request = new PutObjectRequest
             {
                 BucketName = _bucketName,
-                Prefix = key
+                Key = key,
+                ContentType = contentType
             };
 
-            var listResponse = await _s3Client.ListObjectsV2Async(listRequest);
-            var existingObject = listResponse.S3Objects.FirstOrDefault(o => o.Key == key);
-
-            if (existingObject == null)
-            {
-                var request = new PutObjectRequest
-                {
-                    BucketName = _bucketName,
-                    Key = key,
-                    ContentType = contentType
-                };
-
-                await _s3Client.PutObjectAsync(request);
-            }
+            await _s3Client.PutObjectAsync(request);
 
             var presignedUrlRequest = new GetPreSignedUrlRequest
             {
@@ -65,18 +52,38 @@ namespace ProFit.Service.Services
             return await Task.FromResult(_s3Client.GetPreSignedURL(presignedUrlRequest));
         }
 
-
-        public async Task<string> GetDownloadUrlAsync(string fileName)
+        public async Task<string> GererateDownloadUrlAsync(string folderName, string fileName)
         {
+            var key = $"{folderName}/{fileName}";
+
             var request = new GetPreSignedUrlRequest
             {
                 BucketName = _bucketName,
-                Key = fileName,
+                Key = key,
                 Verb = HttpVerb.GET,
                 Expires = DateTime.UtcNow.AddMinutes(30)
             };
 
             return await Task.FromResult(_s3Client.GetPreSignedURL(request));
+        }
+
+        public async Task<string> GeneratePresignedViewUrlAsync(string key, string contentType)
+        {
+
+            var presignedUrlRequest = new GetPreSignedUrlRequest
+            {
+                BucketName = _bucketName,
+                Key = key,
+                Verb = HttpVerb.GET,
+                Expires = DateTime.UtcNow.AddMinutes(30),
+                ResponseHeaderOverrides = new ResponseHeaderOverrides
+                {
+                    ContentType = contentType,
+                    ContentDisposition = "inline" 
+                }
+            };
+
+            return await Task.FromResult(_s3Client.GetPreSignedURL(presignedUrlRequest));
         }
     }
 }

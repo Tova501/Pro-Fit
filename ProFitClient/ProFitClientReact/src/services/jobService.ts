@@ -2,8 +2,9 @@ import axios from 'axios';
 import { getToken } from './authService';
 import { JobPostModel } from '../models/jobTypes';
 
-const API_URL = 'https://pro-fit-g87u.onrender.com/api/job'; 
 
+//const API_URL = 'https://localhost:7131/api/job'; 
+const API_URL = 'https://pro-fit-g87u.onrender.com/api/job';
 // קבלת כל המשרות
 export const getAllJobs = async () => {
     try {
@@ -121,6 +122,21 @@ export const applyToJobWithCV = async (jobId: number, contentType: string) => {
         return response.data;
     } catch (error) {
         console.error('Error applying to job with CV:', error);
+        throw error;
+    }
+};
+
+
+export const getJobApplications = async (jobId: number) => {
+    try {
+        const response = await axios.get(`${API_URL}/${jobId}/applications`, {
+            headers: {
+                Authorization: `Bearer ${getToken()}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching job applications:', error);
         throw error;
     }
 };

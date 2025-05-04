@@ -37,7 +37,7 @@ const Register: React.FC = () => {
                     timer: 2000,
                     showConfirmButton: false,
                 });
-                navigate("/");
+                navigate("/profile");
             } else if (registerUser.rejected.match(resultAction)) {
                 const errorPayload = resultAction.payload as { statusCode: number; message: string };
 

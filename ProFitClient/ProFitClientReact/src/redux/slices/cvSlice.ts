@@ -1,13 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { generateUploadUrl, uploadFileToPresignedUrl, confirmUpload } from '../../services/cvService';
+import { useDispatch } from 'react-redux';
+import { checkAuth } from './userSlice';
+
 
 export const uploadGeneralCV = createAsyncThunk(
     'cv/uploadGeneralCV',
-    async ({ file }: { file: File }, { rejectWithValue }) => {
+    async ({ file }: { file: File }, { rejectWithValue, dispatch }) => {
         try {
             const presignedUrl = await generateUploadUrl(file.type);
             await uploadFileToPresignedUrl(presignedUrl, file);
             const result = await confirmUpload(file.type);
+            console.log('Upload result:', result);
+            dispatch(checkAuth()); // Check authentication after upload
             return result;
         } catch (error) {
             if (error instanceof Error && 'response' in error) {
@@ -15,6 +20,7 @@ export const uploadGeneralCV = createAsyncThunk(
             }
             return rejectWithValue('Upload failed');
         }
+        
     }
 );
 

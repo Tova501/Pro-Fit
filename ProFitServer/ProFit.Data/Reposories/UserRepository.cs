@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProFit.Core.DTOs;
 using ProFit.Core.Entities;
 using ProFit.Core.IRepositories;
 using ProFit.Data.Repositories;
@@ -26,18 +27,6 @@ namespace ProFit.Data.Reposories
         {
             var res = await _context.Users.FirstOrDefaultAsync(user => user.Email == email && user.Password == password);
             return res;
-        }
-
-
-        public async Task<bool> UpdatePasswordAsync(int id, string password)
-        {
-            var user = await _context.Users.Where(user => user.Id == id).FirstOrDefaultAsync();
-            if (user == null)
-            {
-                return false;
-            }
-            user.Password = password;
-            return true;
         }
 
         public async Task<bool> DeleteAsync(int id)

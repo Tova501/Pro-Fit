@@ -2,7 +2,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { login, register, logout, getUserFromToken } from '../../services/authService';
 import { LoginRequest, RegisterRequest } from '../../models/authTypes';
-import User from '../../models/userType';
+import User, { UserPutModel } from '../../models/userTypes';
+import { updateUserDetails } from '../../services/userService';
 
 // Async thunk for login
 export const loginUser = createAsyncThunk('user/login', async (credentials: LoginRequest): Promise<User> => {
@@ -25,20 +26,21 @@ export const registerUser = createAsyncThunk(
             return user;
         } catch (error: any) {
             if (error.response && error.response.status) {
-                // העברת מספר השגיאה באמצעות rejectWithValue
                 return rejectWithValue({
                     statusCode: error.response.status,
                     message: error.response.data?.message || 'An error occurred',
                 });
             }
-            throw error; // זריקת שגיאה כללית אם אין response
+            throw error;
         }
     }
 );
 
 export const checkAuth = createAsyncThunk('user/checkAuth', async (): Promise<User | null> => {
     try {
+        console.log('Checking authentication...');
         const user = await getUserFromToken();
+        console.log('User from token:', user);
         return user;
     } catch (error) {
         return null;
@@ -48,6 +50,14 @@ export const checkAuth = createAsyncThunk('user/checkAuth', async (): Promise<Us
 // Async thunk for logout
 export const logoutUser = createAsyncThunk('user/logout', async () => {
     await logout();
+});
+
+export const updateUser = createAsyncThunk('user/update', async (userData:UserPutModel) => {
+    const user = await updateUserDetails(userData);
+    if(!user){
+        throw new Error("Update failed");
+    }
+    return user;
 });
 
 const userSlice = createSlice({
@@ -98,7 +108,13 @@ const userSlice = createSlice({
             .addCase(checkAuth.rejected, (state) => {
                 state.currentUser = null;
                 state.isLoggedIn = false;
-            });
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.currentUser = action.payload;
+            })
+            .addCase(updateUser.rejected, (state, action) => {
+                state.error = action.error.message;
+            })
     },
 });
 

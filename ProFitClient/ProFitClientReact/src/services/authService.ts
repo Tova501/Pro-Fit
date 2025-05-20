@@ -2,9 +2,8 @@ import axios from 'axios';
 import User from '../models/userTypes';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/authTypes';
 
-// const API_URL = 'https://localhost:7131/api/auth'; 
-const API_URL = 'https://pro-fit-g87u.onrender.com/api/auth'; 
-
+const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL;
+const API_URL = `${BASE_URL}/api/auth`; 
 
 export const login = async (credentials: LoginRequest): Promise<User> => {
     try {

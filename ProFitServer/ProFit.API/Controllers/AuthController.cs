@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using FluentValidation;
-using FluentValidation.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProFit.API.PostModels;
 using ProFit.Core.DTOs;
 using ProFit.Core.Entities;
 using ProFit.Core.IServices;
-using ProFit.Service.Services;
-using System.Security.Claims;
+
 
 namespace ProFit.API.Controllers
 {
@@ -70,10 +67,11 @@ namespace ProFit.API.Controllers
         [Authorize]
         public async Task<ActionResult<UserDTO>> GetUserFromToken()
         {
-
-            var userId = (int)HttpContext.Items["UserId"];
-
-            var user = await _userService.GetUserByIdAsync(userId);
+            
+            var userId = HttpContext.Items["UserId"];
+            if (userId == null)
+                return Unauthorized();
+            var user = await _userService.GetUserByIdAsync((int)userId);
             if (user == null)
             {
                 return NotFound(new { message = "User not found" });

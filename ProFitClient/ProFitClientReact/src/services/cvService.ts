@@ -2,8 +2,8 @@ import axios from 'axios';
 import { getToken } from './authService';
 import store from '../redux/store';
 
-const API_URL = 'https://pro-fit-g87u.onrender.com/api';
-//const API_URL = 'https://localhost:7131/api';
+const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL;
+const API_URL = `${BASE_URL}/api`; 
 
 export const getCV = async (id: number) => {
     try {
@@ -44,7 +44,7 @@ export const generateViewUrl = async (cvId:number) => {
             },
         }
     );
-    console.log(response.data);
+    console.log("generateViewUrl", response.data);
     return response.data.presignedUrl || response.data;
 };
 

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getAllJobs, addJob, updateJob, deleteJob } from '../../services/jobService';
+import { getAllJobs, addJob, updateJob, deleteJob, changeJobStatus } from '../../services/jobService';
 import { Job, JobPostModel } from '../../models/jobTypes';
 
 interface JobState {
@@ -30,7 +30,7 @@ export const editJob = createAsyncThunk('jobs/editJob', async ({ jobId, jobData 
         const response = await updateJob(jobId, jobData);
         return response;
     }
-    catch(error){
+    catch (error) {
         throw error;
     }
 });
@@ -39,6 +39,17 @@ export const removeJob = createAsyncThunk('jobs/removeJob', async (jobId: number
     const response = await deleteJob(jobId);
     return response;
 });
+
+export const toggleJobStatus = createAsyncThunk(
+    'job/toggleJobStatus',
+    async ({ jobId }: { jobId: number; isActive: boolean }) => {
+        const response = await changeJobStatus(jobId)
+        if (!response.ok) {
+            throw new Error('Failed to update job status');
+        }
+        return response.data;
+    }
+);
 
 
 // Slice
@@ -92,12 +103,20 @@ const jobSlice = createSlice({
                 state.error = null;
             })
             .addCase(removeJob.fulfilled, (state, action) => {
+                console.log('Job removed:', action.payload);
                 state.loading = false;
                 state.jobs = state.jobs.filter(job => job.id !== action.payload.id);
             })
             .addCase(removeJob.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Failed to remove job';
+            })
+            .addCase(toggleJobStatus.fulfilled, (state, action) => {
+                const index = state.jobs.findIndex(job => job.id === action.payload.id);
+                if (index !== -1) {
+                    state.jobs[index].isActive = action.payload.isActive;
+                }
+                action.payload.isActive = action.payload.job.isActive;
             });
     },
 });

@@ -207,65 +207,6 @@ namespace ProFit.API.Controllers
             }
         }
 
-        [HttpGet("{id}/applications")]
-        public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetJobApplications(int id)
-        {
-            if (HttpContext.Items["UserId"] is int userId)
-            {
-                var authorizationResult = await _jobService.CanManageJob(id, userId);
-                if (!authorizationResult.IsSuccess)
-                {
-                    return NotFound();
-                }
-                if (!authorizationResult.Value)
-                {
-                    return Unauthorized();
-                }
-                try
-                {
-                    var result = await _jobService.GetApplicationsByJobId(id);
-                    return Ok(result);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-            else
-            {
-                return Unauthorized();
-            }
-        }
-
-        [HttpGet("{id}/applications/{applicationId}/presignedUrl")]
-        public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetViewPresigenedUrl(int id)
-        {
-            if (HttpContext.Items["UserId"] is int userId)
-            {
-                var authorizationResult = await _jobService.CanManageJob(id, userId);
-                if (!authorizationResult.IsSuccess)
-                {
-                    return NotFound();
-                }
-                if (!authorizationResult.Value)
-                {
-                    return Unauthorized();
-                }
-                try
-                {
-                    var result = await _jobService.GetApplicationsByJobId(id);
-                    return Ok(result);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-            else
-            {
-                return Unauthorized();
-            }
-        }
     }
 }
 

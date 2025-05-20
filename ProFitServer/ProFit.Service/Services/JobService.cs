@@ -21,16 +21,20 @@ namespace ProFit.Service.Services
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
         private readonly ICVService _cvService;
+        private readonly IS3Service _s3Service;
 
         public JobService(
             IRepositoryManager repository,
             IMapper mapper,
-            ICVService cvService)
+            ICVService cvService,
+            IS3Service s3Service)
         {
             _repository = repository;
             _mapper = mapper;
             _cvService = cvService;
+            _s3Service = s3Service;
         }
+
         public async Task<JobDTO> AddAsync(JobDTO jobDto)
         {
             var job = _mapper.Map<Job>(jobDto);
@@ -46,6 +50,18 @@ namespace ProFit.Service.Services
             {
                 throw new Exception("User Not Found");
             }
+            // Check if the job has any applications
+            var applications = await _repository.Applications.GetAsync();
+            var jobApplications = applications.Where(a => a.JobId == id).ToList();
+            foreach (var application in jobApplications)
+            {
+                // Delete the application
+                if(!application.CV.IsGeneral)
+                {
+                    await _s3Service.DeleteAsync(application.CV.Path);
+                }
+                _repository.Applications.DeleteAsync(application);
+            }
             _repository.Jobs.DeleteAsync(item);
             await _repository.SaveAsync();
         }
@@ -60,12 +76,6 @@ namespace ProFit.Service.Services
         {
             var job = await _repository.Jobs.GetByIdAsync(id);
             return _mapper.Map<JobDTO>(job);
-        }
-
-        public async Task<List<ApplicationDTO>> GetApplicationsByJobId(int id)
-        {
-            var job = await _repository.Jobs.GetJobWithApplicationsAsync(id);
-            return _mapper.Map<List<ApplicationDTO>>(job?.Applications);
         }
 
         public async Task<JobDTO> UpdateAsync(int id, JobDTO jobDto)
@@ -141,15 +151,18 @@ namespace ProFit.Service.Services
         public async Task<Result<JobDTO>> ChangeStatus(int jobId)
         {
             var existingJob = await _repository.Jobs.GetByIdAsync(jobId);
-            if(existingJob == null)
+            if (existingJob == null)
             {
                 return Result<JobDTO>.Failure("Job not found", 404);
             }
+
             existingJob.IsActive = !existingJob.IsActive;
-            var resultJob = _repository.Jobs.UpdateAsync(jobId, existingJob);
+            await _repository.Jobs.UpdateAsync(jobId, existingJob);
             await _repository.SaveAsync();
-            return Result<JobDTO>.Success(_mapper.Map<JobDTO>(resultJob));
+
+            return Result<JobDTO>.Success(_mapper.Map<JobDTO>(existingJob));
         }
 
     }
 }
+

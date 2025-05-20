@@ -16,12 +16,11 @@ namespace ProFit.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.HasAnnotation("Relational:MaxIdentifierLength", 64); // MySQL-specific
+            modelBuilder.HasAnnotation("Relational:MaxIdentifierLength", 64); 
 
-            // הגדרת טבלת ההיסטוריה של המיגרציות
             modelBuilder.Entity<MigrationHistory>()
                 .ToTable("__EFMigrationsHistory")
-                .HasKey(m => m.MigrationId); // הגדרת מפתח ראשי
+                .HasKey(m => m.MigrationId); 
         }
 
         public class MigrationHistory
@@ -34,7 +33,7 @@ namespace ProFit.Data
         public DbSet<CV> CVs { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
-
+        public DbSet<Application> Applications { get; set; }
 
     }
 }

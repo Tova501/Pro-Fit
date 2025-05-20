@@ -15,5 +15,6 @@ namespace ProFit.Core.DTOs
         public int JobId { get; set; }
         public CvDTO CV { get; set; }
         public int Score { get; set; }
+        public bool IsFavorite { get; set; }
     }
 }

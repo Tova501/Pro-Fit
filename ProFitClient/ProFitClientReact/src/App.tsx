@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { useEffect } from 'react';
 import { checkAuth } from './redux/slices/userSlice';
+import EmailIcon from './components/EmailIcon';
 
 const theme = createTheme({
     palette: {
@@ -83,10 +84,15 @@ function App() {
     }, [dispatch]);
 
     return (
+        <>
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <RouterProvider router={router} />
+
         </ThemeProvider>
+        <EmailIcon/>
+
+        </>
     )
 }
 

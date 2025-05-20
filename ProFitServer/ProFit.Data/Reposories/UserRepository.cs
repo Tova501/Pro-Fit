@@ -18,26 +18,12 @@ namespace ProFit.Data.Reposories
             return await _context.Users.Include(user=>user.Role).FirstOrDefaultAsync(user => user.Email == email);
         }
 
-        public async Task<User> GetUserByIdAsync(int id)
-        {
-            return await _context.Users.Include(user => user.Role).FirstOrDefaultAsync(user => user.Id == id);
-        }
 
         public async Task<User> LoginAsync(string email, string password)
         {
-            var res = await _context.Users.FirstOrDefaultAsync(user => user.Email == email && user.Password == password);
-            return res;
+            var result = await _context.Users.FirstOrDefaultAsync(user => user.Email == email && user.Password == password);
+            return result;
         }
 
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var res = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
-            if (res == null)
-            {
-                return false;
-            }
-            _context.Users.Remove(res);
-            return true;
-        }
     }
 }

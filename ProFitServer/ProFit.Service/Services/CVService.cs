@@ -118,7 +118,7 @@ namespace ProFit.Service.Services
             var cv = await _repository.CVs.GetByIdAsync(id);
             if(cv == null)
             {
-                throw new Exception("Not Fount");
+                throw new Exception("Not Found");
             }
             var url = await _s3Service.GeneratePresignedViewUrlAsync(cv.Path, cv.ContentType);
             return url;

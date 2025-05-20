@@ -27,6 +27,7 @@ const Register: React.FC = () => {
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
         try {
+            data.lastName = '';
             const resultAction = await dispatch(registerUser(data));
             console.log("register resultAction", resultAction);
 
@@ -78,14 +79,6 @@ const Register: React.FC = () => {
                         margin="normal"
                         error={!!errors.firstName}
                         helperText={errors.firstName ? errors.firstName.message : ''}
-                    />
-                    <TextField
-                        label="Last Name"
-                        {...register("lastName", validationRules.lastName)}
-                        fullWidth
-                        margin="normal"
-                        error={!!errors.lastName}
-                        helperText={errors.lastName ? errors.lastName.message : ''}
                     />
                     <TextField
                         label="Email"

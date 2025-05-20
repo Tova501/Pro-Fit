@@ -1,82 +1,155 @@
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../redux/store';
-import { fetchJobs, removeJob } from '../../redux/slices/jobSlice';
-import { Button, Card, CardContent, Typography, Box } from '@mui/material';
-import swal from 'sweetalert2';
-import { useEffect } from 'react';
+import { fetchJobs, toggleJobStatus, removeJob } from '../../redux/slices/jobSlice';
+import { Box, Typography, Menu, MenuItem } from '@mui/material';
+import { useEffect, useState } from 'react';
+import RecruiterJobCard from './RecruiterJobCard';
+import DeleteJobDialog from '../dialogs/DeleteJobDialog';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import JobActionsMenu from './JobActionsMenu';
 
 const RecruiterJobList = () => {
     const navigate = useNavigate();
     const dispatch: AppDispatch = useDispatch();
     const jobs = useSelector((state: RootState) => state.job.jobs);
 
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
     useEffect(() => {
         dispatch(fetchJobs());
-        console.log("Fetching jobs for recruiter");
     }, [dispatch]);
 
-    const handleDelete = async (jobId: number) => {
+    const handleToggleStatus = async (jobId: number, isActive: boolean) => {
         try {
-            await dispatch(removeJob(jobId));
-            swal.fire({
-                title: 'Job deleted successfully!',
-                icon: 'success',
-                timer: 2000,
-            });
+            await dispatch(toggleJobStatus({ jobId, isActive: !isActive }));
         } catch (error) {
-            swal.fire({
-                title: 'Error deleting job',
-                text: 'Please try again later.',
-                icon: 'error',
-            });
+            console.error('Error toggling job status:', error);
+        }
+    };
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, jobId: number) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedJobId(jobId);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleDeleteDialogOpen = () => {
+        setDeleteDialogOpen(true);
+        handleMenuClose();
+    };
+
+    const handleDeleteDialogClose = () => {
+        setDeleteDialogOpen(false);
+    };
+
+    const handleDelete = async () => {
+        if (selectedJobId !== null) {
+            try {
+                await dispatch(removeJob(selectedJobId));
+                setDeleteDialogOpen(false);
+            } catch (error) {
+                console.error('Error deleting job:', error);
+            }
         }
     };
 
     return (
-        <Box>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate('/recruiter/job/add')}
-                sx={{ mb: 2 }}
+        <Box sx={{ padding: 4, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+            <Typography
+                variant="h4"
+                sx={{
+                    textAlign: 'center',
+                    fontWeight: 600,
+                    marginBottom: 1,
+                    color: 'primary.main',
+                }}
             >
-                Add New Job
-            </Button>
-            <Box display="flex" flexWrap="wrap" gap={2}>
+                Job Management Dashboard
+            </Typography>
+
+            <Typography
+                variant="body1"
+                sx={{
+                    textAlign: 'center',
+                    color: 'text.secondary',
+                    marginBottom: 4,
+                }}
+            >
+                Manage your job postings efficiently. Add, edit, or deactivate jobs as needed.
+            </Typography>
+
+            <JobActionsMenu />
+
+            {jobs.length > 0 && <Box
+                display="flex"
+                flexWrap="wrap"
+                gap={3}
+                justifyContent="center"
+                sx={{
+                    backgroundColor: 'white',
+                    padding: 3,
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                }}
+            >
                 {jobs.map((job) => (
-                    <Card key={job.id} sx={{ width: 300 }}>
-                        <CardContent>
-                            <Typography variant="h6">{job.title}</Typography>
-                            <Typography variant="body2" color="textSecondary">
-                                {job.description}
-                            </Typography>
-                        </CardContent>
-                        <Box display="flex" justifyContent="space-between" p={2}>
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                onClick={() => navigate(`/recruiter/job/${job.id}/applications`)}
-                            >
-                                Applications
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                onClick={() => navigate(`/recruiter/job/edit/${job.id}`)}
-                            >
-                                Edit
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                color="error"
-                                onClick={() => handleDelete(job.id)}
-                            >
-                                Delete
-                            </Button>
-                        </Box>
-                    </Card>
+                    <RecruiterJobCard
+                        key={job.id}
+                        job={job}
+                        onToggleStatus={handleToggleStatus}
+                        onMenuOpen={handleMenuOpen}
+                    />
                 ))}
+            </Box>}
+
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+            >
+                <MenuItem onClick={() => navigate(`/recruiter/job/${selectedJobId}/applications`)}>
+                    View Applications
+                </MenuItem>
+                <MenuItem onClick={() => navigate(`/recruiter/job/edit/${selectedJobId}`)}>
+                    Edit Job
+                </MenuItem>
+                <MenuItem onClick={handleDeleteDialogOpen}>
+                    Delete Job
+                </MenuItem>
+            </Menu>
+
+            <DeleteJobDialog
+                open={deleteDialogOpen}
+                onClose={handleDeleteDialogClose}
+                onDelete={handleDelete}
+            />
+
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: '#fff3e0',
+                    padding: 2,
+                    borderRadius: '8px',
+                    marginTop: 4,
+                    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+                }}
+            >
+                <WarningAmberIcon sx={{ color: '#ff9800', marginRight: 1 }} />
+                <Typography
+                    variant="body2"
+                    sx={{
+                        color: '#333',
+                    }}
+                >
+                    To temporarily disable applications for a job, mark it as inactive. You can reactivate it anytime to make it available again.
+                </Typography>
             </Box>
         </Box>
     );

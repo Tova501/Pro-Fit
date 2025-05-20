@@ -3,8 +3,9 @@ import User, { emptyUserModel, UserPutModel } from "../models/userTypes";
 import { getToken } from "./authService";
 import store from "../redux/store";
 
-//const API_URL = 'https://localhost:7131/api/user'; 
-const API_URL = "https://pro-fit-g87u.onrender.com/api/user";
+const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL!;
+const API_URL = `${BASE_URL}/api/user`; 
+
 export const updateUserDetails = async (userData:UserPutModel) => {
     try {
         const currentUser:User = store.getState().user.currentUser || emptyUserModel;

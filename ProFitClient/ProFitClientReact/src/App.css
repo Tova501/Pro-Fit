@@ -1,4 +1,4 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -39,4 +39,37 @@
 
 .read-the-docs {
   color: #888;
+} */
+
+
+.email-icon {
+  padding: 0px;
+  position: fixed;
+  bottom: 20px;
+  right: 25px;
+  background-color: #dfa021;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  border: none;
+  z-index: 1000;
+}
+
+.email-icon:hover {
+  background-color: #70ab9f;
+  transform: scale(1.1);
+}
+
+.email-icon-arrow{
+  color:white;
+  z-index: 1000;
+  width:50vh
 }

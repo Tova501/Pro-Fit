@@ -38,7 +38,7 @@ namespace ProFit.API
             {
                 options.UseMySql(
                     Environment.GetEnvironmentVariable("CONNECTION_STRING"),
-                    new MySqlServerVersion(new Version(8, 0, 23)), // עדכני לגרסה שלך
+                    new MySqlServerVersion(new Version(8, 0, 23)), 
                     options => options.MigrationsHistoryTable("__EFMigrationsHistory")
                 );    
                 //options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
@@ -49,6 +49,7 @@ namespace ProFit.API
             builder.Services.AddScoped<ICVService, CVService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IS3Service, S3Service>();
+            builder.Services.AddScoped<IApplicationService, ApplicationService>();
 
             builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
             builder.Services.AddScoped<IJobRepository, JobRepository>();
@@ -56,6 +57,7 @@ namespace ProFit.API
             builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+            builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             var awsOptions = builder.Configuration.GetAWSOptions();

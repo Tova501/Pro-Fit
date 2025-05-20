@@ -127,6 +127,9 @@ namespace ProFit.Data.Migrations
                     b.Property<int>("CandidateId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("JobId")
                         .HasColumnType("int");
 

@@ -2,8 +2,9 @@ import axios from 'axios';
 import { getToken } from './authService';
 import { JobPostModel } from '../models/jobTypes';
 
-//const API_URL = 'https://localhost:7131/api/job'; 
-const API_URL = 'https://pro-fit-g87u.onrender.com/api/job';
+const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL!;
+const API_URL = `${BASE_URL}/api/job`; 
+
 // קבלת כל המשרות
 export const getAllJobs = async () => {
     try {
@@ -139,3 +140,18 @@ export const getJobApplications = async (jobId: number) => {
         throw error;
     }
 };
+
+export const changeJobStatus = async (jobId: number) =>
+{
+    try {
+        const response = await axios.put(`${API_URL}/${jobId}/change-status`,{}, {
+            headers: {
+                Authorization: `Bearer ${getToken()}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error changing job status:', error);
+        throw error;
+    }
+}

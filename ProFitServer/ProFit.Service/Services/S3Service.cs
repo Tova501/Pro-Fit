@@ -85,5 +85,47 @@ namespace ProFit.Service.Services
 
             return await Task.FromResult(_s3Client.GetPreSignedURL(presignedUrlRequest));
         }
+
+        public async Task<string> GeneratePresignedUrlUpdateAsync(string path)
+        {
+            var presignedUrlRequest = new GetPreSignedUrlRequest
+            {
+                BucketName = _bucketName,
+                Key = path,
+                Verb = HttpVerb.PUT,
+                Expires = DateTime.UtcNow.AddMinutes(15)
+            };
+
+            return await Task.FromResult(_s3Client.GetPreSignedURL(presignedUrlRequest));
+        }
+
+        public async Task<bool> DeleteAsync(string path)
+        {
+            try
+            {
+                var deleteObjectRequest = new DeleteObjectRequest
+                {
+                    BucketName = _bucketName,
+                    Key = path
+                };
+
+                var response = await _s3Client.DeleteObjectAsync(deleteObjectRequest);
+
+                return response.HttpStatusCode == System.Net.HttpStatusCode.NoContent;
+            }
+            catch (AmazonS3Exception ex)
+            {
+                // Log the exception or handle it as needed
+                Console.WriteLine($"Error deleting object from S3: {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                return false;
+            }
+        }
+
     }
 }

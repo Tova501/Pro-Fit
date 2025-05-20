@@ -26,5 +26,6 @@ namespace ProFit.Core.Entities
         public int? CVId { get; set; }
         public CV CV { get; set; }
         public int Score { get; set; }
+        public bool IsFavorite { get; set; } = false;
     }
 }

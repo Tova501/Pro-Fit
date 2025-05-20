@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { generateUploadUrl, uploadFileToPresignedUrl, confirmUpload } from '../../services/cvService';
-import { useDispatch } from 'react-redux';
 import { checkAuth } from './userSlice';
 
 

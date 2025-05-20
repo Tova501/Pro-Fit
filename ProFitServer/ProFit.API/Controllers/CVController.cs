@@ -86,11 +86,5 @@ namespace ProFit.API.Controllers
             return Ok(cvResult);
         }
 
-
-        // DELETE api/<CVController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

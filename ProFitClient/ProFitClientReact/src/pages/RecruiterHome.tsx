@@ -1,5 +1,5 @@
-import { Box, IconButton, Typography, Grid, Card, Button } from '@mui/material';
-import { WorkOutline, Visibility, BarChart, Settings } from '@mui/icons-material';
+import { Box, IconButton, Typography, Grid, Card } from '@mui/material';
+import { WorkOutline, Visibility } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const RecruiterHome = () => {

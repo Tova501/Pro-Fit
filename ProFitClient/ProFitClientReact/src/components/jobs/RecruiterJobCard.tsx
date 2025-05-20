@@ -26,12 +26,6 @@ const JobCard: React.FC<JobCardProps> = ({ job, onToggleStatus, onMenuOpen }) =>
                 <Typography variant="h6" noWrap sx={{ color: '#333' }}>
                     {job.title}
                 </Typography>
-                <Typography variant="body2" color="textSecondary">
-                    <strong>Last Updated:</strong> {new Date(job.updatedAt).toLocaleDateString()}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                    <strong>Applications:</strong> {job.applicationsCount || 0}
-                </Typography>
                 <Chip
                     label={job.isActive ? 'Active' : 'Inactive'}
                     sx={{

@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import '../styles/AppLayout.css';
 import Sidebar from './Sidebar';
-import Navbar from './Navbar';
 
 const AppLayout = () => {
     return (
@@ -17,7 +16,6 @@ const AppLayout = () => {
                     flexDirection: 'column',
                 }}
             >
-                <Navbar />
                 <Outlet />
             </div>
         </div>

@@ -10,6 +10,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import UploadCV from '../UploadCV';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const CandidateJobList = () => {
     const [errorMessage, setErrorMessage] = useState("");
@@ -100,12 +101,12 @@ const CandidateJobList = () => {
                                 />
                             </IconButton>
                         </Tooltip>
-                    </Box>
                     {errorMessage && (
-                        <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }} icon={<AlertCircle size={20} />}>
+                        <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }} icon={<ErrorOutlineIcon fontSize="small" />}>
                             {errorMessage}
                         </Alert>
                     )}
+                    </Box>
                 </Card>
             ))}
         </Box>

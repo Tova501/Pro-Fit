@@ -25,8 +25,6 @@ const JobActionsMenu = () => {
             Title: job.title,
             Description: job.description,
             Status: job.isActive ? 'Active' : 'Inactive',
-            CreatedAt: job.createdAt,
-            UpdatedAt: job.updatedAt,
         }));
 
         // Convert to CSV

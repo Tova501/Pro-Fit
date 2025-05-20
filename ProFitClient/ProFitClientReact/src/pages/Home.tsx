@@ -1,4 +1,4 @@
-import { Container, Box, Card, Typography, Avatar } from '@mui/material';
+import { Container, Box, Card, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';

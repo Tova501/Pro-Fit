@@ -10,8 +10,6 @@ import {
   Paper,
   Box,
   Avatar,
-  Card,
-  CardContent,
 } from '@mui/material';
 import {
   Edit as EditIcon,

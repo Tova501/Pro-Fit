@@ -10,7 +10,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AvatarProfile from './Avatar';
-import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Drawer, Toolbar, Typography, Button, IconButton } from '@mui/material';
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Drawer, Toolbar, Button, IconButton } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 

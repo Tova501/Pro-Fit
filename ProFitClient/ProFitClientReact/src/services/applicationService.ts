@@ -5,6 +5,7 @@ const API_URL = `${import.meta.env.VITE_REACT_APP_API_URL}/api/application`;
 
 export const getJobApplications = async (jobId: number | undefined) => {
     try {
+        console.log("jobId in service", jobId)
         const response = await axios.get(`${API_URL}`, {
             headers: {
             Authorization: `Bearer ${getToken()}`,

@@ -23,7 +23,7 @@ const EditJob = () => {
 
     const onSubmit = async (data: JobPostModel) => {
         try {
-            var response = await dispatch(editJob({ "jobId": id, "jobData": data }));
+            await dispatch(editJob({ "jobId": id, "jobData": data }));
             swal.fire({
                 title: "Job Updated Successfully!",
                 icon: "success",

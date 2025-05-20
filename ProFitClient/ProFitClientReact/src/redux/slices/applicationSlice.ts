@@ -16,7 +16,7 @@ const initialState: ApplicationState = {
 
 export const fetchApplications = createAsyncThunk(
     'applications/fetchApplications',
-    async (jobId:number, { rejectWithValue }) => {
+    async (jobId:number | undefined, { rejectWithValue }) => {
         try {
             return await getJobApplications(jobId);
         } catch (error: any) {

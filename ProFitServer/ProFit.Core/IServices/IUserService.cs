@@ -10,19 +10,13 @@ namespace ProFit.Core.IServices
 {
     public interface IUserService 
     {
-        //GET
         public Task<IEnumerable<UserDTO>> GetAllUsersAsync();
         public Task<UserDTO> GetUserByIdAsync(int id);
         public Task<UserDTO> GetUserByEmailAsync(string email);
-
-        //PUT
         public Task<UserDTO> RegisterAsync(UserDTO user);
-
-        //POST
         public Task<UserDTO> LoginAsync(string email, string password);
         public Task<UserDTO> UpdatePersonalDetailsAsync(int id, UserDTO user);
-
-        //DELETE
+        public Task<UserDTO?> ToggleUserStatus(int id);
         public Task<bool> DeleteUserAsync(int id);
     }
 }

@@ -86,5 +86,18 @@ namespace ProFit.API.Controllers
             return Ok(cvResult);
         }
 
+        [HttpPut("generate-update-url")]
+        public async Task<ActionResult<string>> Update()
+        {
+            var userId = (int)HttpContext.Items["UserId"];
+            var cv = await _cvService.GetGeneralCVByUserId(userId);
+            var url = await _cvService.GetUpdateUrlAsync(cv.Id);
+            if(url == null)
+            {
+                return BadRequest();
+            }
+            return Ok(new { presignedUrl = url }); ;
+        }
+
     }
 }

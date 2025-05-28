@@ -1,17 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { generateUploadUrl, uploadFileToPresignedUrl, confirmUpload } from '../../services/cvService';
 import { checkAuth } from './userSlice';
+import { uploadGeneralCVtoS3 } from '../../services/cvService';
 
 
 export const uploadGeneralCV = createAsyncThunk(
     'cv/uploadGeneralCV',
     async ({ file }: { file: File }, { rejectWithValue, dispatch }) => {
         try {
-            const presignedUrl = await generateUploadUrl(file.type);
-            await uploadFileToPresignedUrl(presignedUrl, file);
-            const result = await confirmUpload(file.type);
+            const result = await uploadGeneralCVtoS3(file);
             console.log('Upload result:', result);
-            dispatch(checkAuth()); // Check authentication after upload
+            dispatch(checkAuth()); 
             return result;
         } catch (error) {
             if (error instanceof Error && 'response' in error) {

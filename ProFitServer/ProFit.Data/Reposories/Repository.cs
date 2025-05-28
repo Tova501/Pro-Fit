@@ -23,7 +23,7 @@ namespace ProFit.Data.Repositories
             return resultEntity.Entity;
         }
 
-        public async void DeleteAsync(T entity)
+        public void DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
         }

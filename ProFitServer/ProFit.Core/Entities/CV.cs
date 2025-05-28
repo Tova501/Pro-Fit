@@ -12,9 +12,10 @@ public class CV
 
     [Column("UploadedAt", TypeName = "datetime(6)")]
     public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
-    // [Column("UpdatedAt", TypeName = "timestamp with time zone")]
+
     [Column("UpdatedAt", TypeName = "datetime(6)")]
      public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public bool IsGeneral { get; set; }
     public string ContentType { get; set; }
+    public long Size { get; set; }
 }

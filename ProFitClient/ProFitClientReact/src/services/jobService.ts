@@ -1,19 +1,11 @@
 import axios from 'axios';
-import { getToken } from './authService';
 import { JobPostModel } from '../models/jobTypes';
-
-const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-const API_URL = `${BASE_URL}/api/job`; 
+import axiosHttp from './axioshttp';
 
 // קבלת כל המשרות
 export const getAllJobs = async () => {
     try {
-        const response = await axios.get(API_URL, {
-            headers: { 
-                Authorization: `Bearer ${getToken()}` 
-            },
-        });
-
+        const response = await axiosHttp.get('job')
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -25,11 +17,7 @@ export const getAllJobs = async () => {
 // הוספת משרה חדשה
 export const addJob = async (jobData: JobPostModel) => {
     try {
-        const response = await axios.post(API_URL, jobData, {
-            headers: {
-                Authorization: `Bearer ${getToken()}`
-            }
-        });
+        const response = await axiosHttp.post('job', jobData);
         return response.data;
     } catch (error) {
         console.error('Error adding job:', error);
@@ -40,11 +28,7 @@ export const addJob = async (jobData: JobPostModel) => {
 // עדכון משרה קיימת
 export const updateJob = async (jobId: number, jobData: JobPostModel) => {
     try {
-        const response = await axios.put(`${API_URL}/${jobId}`, jobData, {
-            headers: {
-                Authorization: `Bearer ${getToken()}`
-            }
-        });
+        const response = await axiosHttp.put(`job/${jobId}`, jobData);
         return response.data;
     } catch (error) {
         console.error('Error updating job:', error);
@@ -55,11 +39,7 @@ export const updateJob = async (jobId: number, jobData: JobPostModel) => {
 // מחיקת משרה
 export const deleteJob = async (jobId: number) => {
     try {
-        const response = await axios.delete(`${API_URL}/${jobId}`, {
-            headers: {
-                Authorization: `Bearer ${getToken()}`
-            }
-        });
+        const response = await axiosHttp.delete(`job/${jobId}`);
         return response.data;
     } catch (error) {
         console.error('Error deleting job:', error);
@@ -70,15 +50,8 @@ export const deleteJob = async (jobId: number) => {
 // Apply to a job without a CV
 export const applyToJob = async (jobId: number) => {
     try {
-        const response = await axios.post(
-            `${API_URL}/${jobId}/Apply`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${getToken()}`,
-                },
-            }
-        );
+        const response = await axiosHttp.post(
+            `job/${jobId}/Apply`, {});
         return response.data;
     } catch (error) {
         console.error('Error applying to job:', error);
@@ -87,14 +60,13 @@ export const applyToJob = async (jobId: number) => {
 };
 
 // Get Presigned URL for uploading a CV
-export const getPresignedUrlForCV = async (jobId: number, contentType: string) => {
+const getPresignedUrlForCV = async (jobId: number, contentType: string) => {
     try {
-        const response = await axios.post(
-            `${API_URL}/${jobId}/CreatePresignedUrlForCV`,
+        const response = await axiosHttp.post(
+            `job/${jobId}/CreatePresignedUrlForCV`,
             { contentType },
             {
                 headers: {
-                    Authorization: `Bearer ${getToken()}`,
                     'Content-Type': 'application/json',
                 },
             }
@@ -107,14 +79,20 @@ export const getPresignedUrlForCV = async (jobId: number, contentType: string) =
 };
 
 // Apply to a job with a CV
-export const applyToJobWithCV = async (jobId: number, contentType: string) => {
+export const applyToJobWithCV = async (jobId: number, file: File) => {
     try {
-        const response = await axios.post(
-            `${API_URL}/${jobId}/ConfirmCVUploadAndApply`,
+        const contentType:string = file.type;
+
+        const presignedUrl = await getPresignedUrlForCV(jobId, contentType);
+        if (!presignedUrl) {
+            throw new Error('Failed to get presigned URL for CV upload');
+        }
+        await axios.post(presignedUrl, file)
+        const response = await axiosHttp.post(
+            `job/${jobId}/ConfirmCVUploadAndApply`,
             { contentType },
             {
                 headers: {
-                    Authorization: `Bearer ${getToken()}`,
                     'Content-Type': 'application/json',
                 },
             }
@@ -129,11 +107,7 @@ export const applyToJobWithCV = async (jobId: number, contentType: string) => {
 
 export const getJobApplications = async (jobId: number) => {
     try {
-        const response = await axios.get(`${API_URL}/${jobId}/applications`, {
-            headers: {
-                Authorization: `Bearer ${getToken()}`,
-            },
-        });
+        const response = await axiosHttp.get(`job/${jobId}/applications`);
         return response.data;
     } catch (error) {
         console.error('Error fetching job applications:', error);
@@ -144,11 +118,7 @@ export const getJobApplications = async (jobId: number) => {
 export const changeJobStatus = async (jobId: number) =>
 {
     try {
-        const response = await axios.put(`${API_URL}/${jobId}/change-status`,{}, {
-            headers: {
-                Authorization: `Bearer ${getToken()}`,
-            },
-        });
+        const response = await axiosHttp.put(`job/${jobId}/change-status`,{});
         return response.data;
     } catch (error) {
         console.error('Error changing job status:', error);

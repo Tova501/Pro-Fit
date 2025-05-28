@@ -8,7 +8,7 @@ namespace ProFit.Core.IServices
         Task<IEnumerable<CvDTO>> GetAllAsync();
         Task<CvDTO> GetGeneralCVByUserId(int userId);
         Task<CvDTO> GetByIdAsync(int id);
-        Task<CvDTO> UpdateAsync(int id, MemoryStream stream);
+        Task<string> GetUpdateUrlAsync(int id);
         Task<bool> DeleteAsync(int id);
         Task<CvDTO> ConfirmGeneralCVUpload(int userId, string contentType);
         Task<CvDTO> ConfirmJobSpecificCVUpload(int jobId, int userId, string contentType);

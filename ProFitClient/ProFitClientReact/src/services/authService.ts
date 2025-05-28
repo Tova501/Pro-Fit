@@ -1,13 +1,11 @@
-import axios from 'axios';
+import axiosHttp from './axioshttp';
 import User from '../models/userTypes';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/authTypes';
-
-const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL;
-const API_URL = `${BASE_URL}/api/auth`; 
+import axios from 'axios';
 
 export const login = async (credentials: LoginRequest): Promise<User> => {
     try {
-        const response = await axios.post<AuthResponse>(`${API_URL}/login`, credentials);
+        const response = await axiosHttp.post<AuthResponse>(`auth/login`, credentials);
         if (!response.data) {
             throw "Invalid response data";
         }
@@ -22,7 +20,7 @@ export const login = async (credentials: LoginRequest): Promise<User> => {
 
 export const register = async (userData: RegisterRequest): Promise<User | undefined> => {
     try {
-        const response = await axios.post<AuthResponse>(`${API_URL}/register`, userData);
+        const response = await axiosHttp.post<AuthResponse>(`auth/register`, userData);
         if (!response.data) {
             throw "Invalid response data";
         }
@@ -52,18 +50,14 @@ export const getUserFromToken = async (): Promise<User | null> => {
     if (!token) {
         return null;
     }
-
     try {
-        const response = await axios.get<User>(`${API_URL}/me`, {
+        const response = await axiosHttp.get<User>(`auth/me`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-            console.log("Error fetching user from token:", error.response.data);
-        }
         localStorage.removeItem('token');
         throw error;
     }

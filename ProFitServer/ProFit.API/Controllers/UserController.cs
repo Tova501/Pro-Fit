@@ -24,18 +24,17 @@ namespace ProFit.API.Controllers
             return Ok(await _userService.GetAllUsersAsync());
         }
 
-        // GET api/<UserController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpPost("{id}/toggle-status")]
+        public async Task<ActionResult> ToggleUserStatus(int id)
         {
-            return "value";
+            var userResult = await _userService.ToggleUserStatus(id);
+            if(userResult == null)
+            {
+                return BadRequest();
+            }
+            return Ok(userResult);
         }
 
-        // POST api/<UserController>
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
 
         // PUT api/<UserController>/5
         [HttpPut("{id}/personal-details")]
@@ -56,8 +55,12 @@ namespace ProFit.API.Controllers
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            var result = await _userService.DeleteUserAsync(id);
+            if (result == false)
+                return BadRequest();
+            return Ok();
         }
     }
 }

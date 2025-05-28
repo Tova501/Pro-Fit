@@ -8,7 +8,7 @@ import { Application } from '../../models/applicationType';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import { markAsFavorite, unmarkAsFavorite } from '../../redux/slices/applicationSlice';
-import CVFile from '../CVFile';
+import CVFile from '../cv/CVFile';
 import gmailService from '../../services/gmailService';
 
 const Applicant = () => {

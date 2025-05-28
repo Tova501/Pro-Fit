@@ -48,8 +48,9 @@ namespace ProFit.Service.Services
                     IsGeneral = true,
                     ContentType = contentType,
                     Path = $"general/{userId}",
+                   
                     UpdatedAt = DateTime.UtcNow
-                };
+                }; 
 
                 var resultCV = await _repository.CVs.AddAsync(cv);
                 await _repository.SaveAsync();
@@ -71,12 +72,15 @@ namespace ProFit.Service.Services
 
         public async Task<CvDTO> ConfirmJobSpecificCVUpload(int jobId, int userId, string contentType)
         {
+            var path = $"{jobId}/{userId}";
+            var cvSize = await _s3Service.GetFileSizeAsync(path);
             CV cv = new CV()
             {
                 CandidateId = userId,
                 IsGeneral = false,
                 ContentType = contentType,
-                Path = $"{jobId}/{userId}"
+                Path = path,
+                Size = cvSize
             };
             var resultCV = await _repository.CVs.AddAsync(cv);
             await _repository.SaveAsync();
@@ -108,9 +112,18 @@ namespace ProFit.Service.Services
             return _mapper.Map<CvDTO>(item);
         }
 
-        public async Task<CvDTO> UpdateAsync(int id, MemoryStream stream)
+        public async Task<string> GetUpdateUrlAsync(int id)
         {
-            throw new Exception("Not Implemnted");
+            var cv = await _repository.CVs.GetByIdAsync(id);
+            if (cv == null)
+            {
+                throw new Exception("General CV not found for user.");
+            }
+            var url = await _s3Service.GeneratePresignedUrlUpdateAsync(cv.Path);
+            cv.UpdatedAt = DateTime.UtcNow;
+            await _repository.CVs.UpdateAsync(cv.Id, cv);
+            await _repository.SaveAsync();
+            return url;
         }
 
         public async Task<string> GetViewUrlByIdAsync(int id)

@@ -1,5 +1,5 @@
 import { Typography, Box } from "@mui/material";
-import CVFile from "../CVFile";
+import CVFile from "../cv/CVFile";
 import { useEffect, useState } from "react";
 import { getGeneralCV } from "../../services/cvService";
 

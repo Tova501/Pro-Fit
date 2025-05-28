@@ -19,6 +19,23 @@ namespace ProFit.Core.DTOs
         public string Password { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool HasUploadedGeneralCV { get; set; }
-
+        public bool IsActive { get; set; }
     }
+        public class UserGrowthOverTimeDTO
+        {
+            public DateTime Date { get; set; }
+            public int UserCount { get; set; }
+        }
+
+        public class UserActiveStatusPieDTO
+        {
+            public int ActiveUsers { get; set; }
+            public int InactiveUsers { get; set; }
+        }
+
+        public class UserCVUploadBarDTO
+        {
+            public int UploadedCV { get; set; }
+            public int NotUploadedCV { get; set; }
+        }
 }

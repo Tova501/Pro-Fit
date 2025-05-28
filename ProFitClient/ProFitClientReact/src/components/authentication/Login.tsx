@@ -2,7 +2,7 @@ import React from 'react';
 //import { GoogleLogin } from '@react-oauth/google';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import validationRules from '../../validations/LoginValidations';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
@@ -16,21 +16,24 @@ interface FormData {
 }
 
 const Login: React.FC = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         mode: 'onBlur'
     });
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
+
         const loginResults = await dispatch(loginUser(data));
         if (loginUser.fulfilled.match(loginResults)) {
             console.log('Login successful:', loginResults.payload);
-            Swal.fire({
+            await Swal.fire({
                 title: "Login successful.",
                 icon: "success",
                 timer: 2000,
                 showConfirmButton: false
             });
+            navigate('/'); 
         }
         else {
             Swal.fire({

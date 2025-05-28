@@ -64,7 +64,6 @@ namespace ProFit.API.Controllers
 
 
         [HttpGet("me")]
-        [Authorize]
         public async Task<ActionResult<UserDTO>> GetUserFromToken()
         {
             

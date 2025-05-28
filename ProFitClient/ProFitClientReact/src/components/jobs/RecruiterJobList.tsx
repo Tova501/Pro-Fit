@@ -5,7 +5,7 @@ import { fetchJobs, toggleJobStatus, removeJob } from '../../redux/slices/jobSli
 import { Box, Typography, Menu, MenuItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import RecruiterJobCard from './RecruiterJobCard';
-import DeleteJobDialog from '../dialogs/DeleteJobDialog';
+import DeleteJobDialog from './DeleteJobDialog';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import JobActionsMenu from './JobActionsMenu';
 

@@ -34,6 +34,7 @@ namespace ProFit.Service.Services
                 return false;
             }
             _userRepository.DeleteAsync(user);
+            await _repository.SaveAsync();
             return true;
         }
 
@@ -81,5 +82,17 @@ namespace ProFit.Service.Services
             return resultDTO;
         }
 
+        public async Task<UserDTO?> ToggleUserStatus(int id)
+        {
+            var existingUser = await _repository.Users.GetByIdAsync(id);
+            if (existingUser == null)
+                return null;
+            existingUser.IsActive = !existingUser.IsActive;
+            var result = await _repository.Users.UpdateAsync(id, existingUser);
+
+            await _repository.SaveAsync();
+            var resultDTO = _mapper.Map<UserDTO>(result);
+            return resultDTO;
+        }
     }
 }

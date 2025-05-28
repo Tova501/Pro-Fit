@@ -50,6 +50,7 @@ namespace ProFit.API
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IS3Service, S3Service>();
             builder.Services.AddScoped<IApplicationService, ApplicationService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
             builder.Services.AddScoped<IJobRepository, JobRepository>();
@@ -80,7 +81,7 @@ namespace ProFit.API
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                    ValidIssuers = Environment.GetEnvironmentVariable("JWT_ISSUERS")?.Split(',', StringSplitOptions.RemoveEmptyEntries),
                     ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")))
                 };

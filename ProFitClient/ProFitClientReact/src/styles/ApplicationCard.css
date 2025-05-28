@@ -1,0 +1,101 @@
+.application-card {
+    color: #284670;
+    position: relative;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    min-height: 150px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.application-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.application-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.application-avatar {
+    width: 56px;
+    height: 56px;
+    background-color: var(--mui-palette-primary-light);
+    color: var(--mui-palette-primary-contrastText);
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.application-card-content {
+    flex-grow: 1;
+    padding: 4px 0;
+    cursor: pointer;
+}
+
+.application-name {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.application-name:hover {
+    text-decoration: underline;
+}
+
+.application-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.application-collapse {
+    margin-top: 16px;
+}
+
+.application-divider {
+    margin-bottom: 16px;
+}
+
+.application-assessment {
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.application-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.application-assessment-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.application-score {
+    font-weight: 600;
+    color: var(--mui-palette-primary-main);
+}
+
+.application-advantage,
+.application-disadvantage {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.application-recommendation {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--mui-palette-text-secondary);
+}

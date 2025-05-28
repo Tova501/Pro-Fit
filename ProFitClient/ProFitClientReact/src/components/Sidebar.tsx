@@ -1,40 +1,53 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 import { RootState } from '../redux/store';
-import { logoutUser } from '../redux/slices/userSlice';
+import { checkAuth, logoutUser } from '../redux/slices/userSlice';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import AvatarProfile from './Avatar';
-import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Drawer, Toolbar, Button, IconButton } from '@mui/material';
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Drawer, Toolbar, IconButton } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import StarRateIcon from '@mui/icons-material/StarRate';
+import ProfitLogo from '../assets/proFitLogo.png';
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  onToggleSidebar: (isOpen:boolean) => void;  
+}
+
+const Sidebar = ({onToggleSidebar}:SidebarProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, []);
+
   const location = useLocation();
   const isRecruiter = location.pathname.includes('recruiter');
   const isCandidate = location.pathname.includes('candidate');
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-  const dispatch = useDispatch<AppDispatch>();
 
   const handleLogout = () => {
     dispatch(logoutUser());
   };
 
-  const [open, setOpen] = useState(false); // מצב פתיחה של הסיידבר
-  const [drawerOpen, setDrawerOpen] = useState(false); // מצב פתיחה לדרואו במובייל
+  const [open, setOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    setOpen(!open);
-  };
+    const toggleSidebar = () => {
+        const newState = !open;
+        setOpen(newState);
+        onToggleSidebar(newState);
+    };
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
+
+  const colorButtonSx = { [`& .MuiTypography-root`]: { color: 'white !important' } }
 
   return (
     <>
@@ -42,7 +55,8 @@ const Sidebar: React.FC = () => {
         variant="permanent"
         open={drawerOpen}
         sx={{
-          width: open ? 240 : 60, // רוחב משתנה
+          boxShadow: '5px 0px 10px #2846707d',
+          width: open ? 240 : 60,
           flexShrink: 0,
           [`& .MuiDrawer-paper`]: {
             width: open ? 240 : 60,
@@ -50,15 +64,12 @@ const Sidebar: React.FC = () => {
             backgroundColor: 'primary.main',
             color: 'white',
             transition: 'width 0.3s',
-            // overflow: open ? 'hidden' : 'auto',
             overflow: 'hidden'
           },
         }}
       >
         <Toolbar sx={{ zIndex: 1000, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingLeft: 3, marginBottom: 2, color: 'white' }}>
-          <Button component={Link} to={'/'} sx={{ padding: 0, marginBottom: 1 }}>
 
-          </Button>
           {open}
           <IconButton onClick={toggleSidebar} sx={{ width: '40px', color: 'white', position: 'absolute', top: 16, right: 10 }}>
             <ChevronLeftIcon sx={{ transform: open ? 'rotate(0deg)' : 'rotate(180deg)', transition: 'transform 0.3s' }} />
@@ -67,11 +78,11 @@ const Sidebar: React.FC = () => {
 
         <List>
           <ListItem disablePadding>
-            <ListItemButton component={Link} to={'/'} sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.08)' } }}>
+            <ListItemButton component={Link} to={'/'} sx={{ color: 'white', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.08)' } }}>
               <ListItemIcon sx={{ color: 'white' }}>
                 <HomeIcon />
               </ListItemIcon>
-              {open && <ListItemText primary="Home" />}
+              {open && <ListItemText primary="Home" sx={colorButtonSx} />}
             </ListItemButton>
           </ListItem>
 
@@ -83,14 +94,23 @@ const Sidebar: React.FC = () => {
                     <ListItemIcon sx={{ color: 'white' }}>
                       <WorkIcon />
                     </ListItemIcon>
-                    {open && <ListItemText primary="Jobs Dashboard" />}
+                    {open && <ListItemText sx={colorButtonSx} primary="Jobs Dashboard" />}
                   </ListItemButton>
-                </ListItem><ListItem disablePadding>
+                </ListItem>
+                  <ListItem disablePadding>
                     <ListItemButton component={Link} to={'/recruiter/job/add'}>
                       <ListItemIcon sx={{ color: 'white' }}>
                         <AddCircleIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Add Job" />
+                      <ListItemText primary="Add Job" sx={colorButtonSx} />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton component={Link} to={'/recruiter/favorites'}>
+                      <ListItemIcon sx={{ color: 'white' }}>
+                        <StarRateIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Review Applicants" sx={colorButtonSx} />
                     </ListItemButton>
                   </ListItem></>
               )}
@@ -100,7 +120,7 @@ const Sidebar: React.FC = () => {
                     <ListItemIcon sx={{ color: 'white' }}>
                       <WorkIcon />
                     </ListItemIcon>
-                    {open && <ListItemText primary="View Jobs" />}
+                    {open && <ListItemText primary="View Jobs" sx={colorButtonSx} />}
                   </ListItemButton>
                 </ListItem>
               )}
@@ -109,11 +129,8 @@ const Sidebar: React.FC = () => {
                   <ListItemIcon sx={{ color: 'white' }}>
                     <ExitToAppIcon />
                   </ListItemIcon>
-                  {open && <ListItemText primary="Logout" />}
+                  {open && <ListItemText primary="Logout" sx={colorButtonSx} />}
                 </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                {open && <AvatarProfile />}
               </ListItem>
             </>
           )}
@@ -125,7 +142,7 @@ const Sidebar: React.FC = () => {
                   <ListItemIcon sx={{ color: 'white' }}>
                     <LoginIcon />
                   </ListItemIcon>
-                  {open && <ListItemText primary="Login" />}
+                  {open && <ListItemText primary="Login" sx={colorButtonSx} />}
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
@@ -133,12 +150,23 @@ const Sidebar: React.FC = () => {
                   <ListItemIcon sx={{ color: 'white' }}>
                     <PersonAddIcon />
                   </ListItemIcon>
-                  {open && <ListItemText primary="Register" />}
+                  {open && <ListItemText primary="Register" sx={colorButtonSx} />}
                 </ListItemButton>
               </ListItem>
             </>
           )}
         </List>
+        {open && (
+          <img src={ProfitLogo} style={{
+            boxShadow: '#ffffffc2 10px 0px 15px',
+            height: '260px',
+            width: '240px',
+            backgroundColor: 'white',
+            position: 'absolute',
+            bottom: '0px',
+            padding: '40px'
+          }} />
+        )}
       </Drawer>
 
       {/* כפתור פתיחה במובייל */}

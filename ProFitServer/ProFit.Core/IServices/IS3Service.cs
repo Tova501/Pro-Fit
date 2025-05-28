@@ -17,6 +17,8 @@ namespace ProFit.Core.IServices
         public Task<string> GeneratePresignedUrlUpdateAsync(string path);
 
         public Task<bool> DeleteAsync(string path);
+        public Task<long> GetFileSizeAsync(string path);
+
 
     }
 }

@@ -10,6 +10,7 @@ namespace ProFit.Core.DTOs
         public string Path { get; set; }
 
         public string ContentType { get; set; }
+        public long Size { get; set; }
     }
 
 }

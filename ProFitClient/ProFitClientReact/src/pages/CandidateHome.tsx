@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from '@mui/material';
 import { Search, Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import ActionCard from '../components/ActionCard';
+import ActionCard from '../components/common/ActionCard';
 import Footer from '../components/Footer';
 
 const CandidateHome = () => {
@@ -43,7 +43,7 @@ const CandidateHome = () => {
               title="Search Jobs"
               description="Explore opportunities that match your skills and interests."
               icon={<Search sx={{ color: '#fff', fontSize: '2rem' }} />}
-              onClick={() => navigate('/jobs')}
+              onClick={() => navigate('job')}
               backgroundColor="#DFA122"
             />
           </Grid>
@@ -137,75 +137,7 @@ const CandidateHome = () => {
             </Grid>
           </Grid>
         </Box>
-
-        {/* Recommended Jobs */}
-        <Box
-          sx={{
-            marginTop: '50px',
-            padding: '20px',
-            backgroundColor: '#F9FAFB',
-            borderRadius: '8px',
-            boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.1)',
-          }}
-        >
-          <Typography variant="h4" sx={{ fontWeight: 700, marginBottom: 3, color: '#284670' }}>
-            Recommended Jobs
-          </Typography>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
-              <Box
-                sx={{
-                  padding: '20px',
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  backgroundColor: '#fff',
-                  transition: 'transform 0.3s ease',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
-                  },
-                }}
-              >
-                <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                  Frontend Developer
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#555', marginBottom: 2 }}>
-                  Company: TechCorp
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#555' }}>
-                  Location: Remote
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box
-                sx={{
-                  padding: '20px',
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  backgroundColor: '#fff',
-                  transition: 'transform 0.3s ease',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
-                  },
-                }}
-              >
-                <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                  Data Scientist
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#555', marginBottom: 2 }}>
-                  Company: DataWorks
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#555' }}>
-                  Location: New York, NY
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </Box>
       </Box>
-
-      {/* Footer */}
-      <Footer />
     </Box>
   );
 };

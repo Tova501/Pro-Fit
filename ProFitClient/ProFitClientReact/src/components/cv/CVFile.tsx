@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { generateViewUrl } from "../services/cvService";
+import { generateViewUrl } from "../../services/cvService";
 import { Box, Typography } from "@mui/material";
 import swal from "sweetalert2";
 

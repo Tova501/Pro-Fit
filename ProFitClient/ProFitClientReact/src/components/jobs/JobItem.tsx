@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { Button, Card, CardContent, Typography, Box, Chip, Divider, IconButton, Tooltip } from '@mui/material';
+import { Button, Card, CardContent, Typography, Box, Divider, IconButton, Tooltip } from '@mui/material';
 import { Job } from '../../models/jobTypes';
 import ApplyingToJobDialog from './ApplyingToJobDialog';
 import LocationOnIcon from '@mui/icons-material/LocationOn';

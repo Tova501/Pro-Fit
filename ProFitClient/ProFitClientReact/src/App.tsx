@@ -6,12 +6,11 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { useEffect } from 'react';
 import { checkAuth } from './redux/slices/userSlice';
 import EmailIcon from './components/EmailIcon';
-import { customTheme } from './styles/customTheme';
-
-const theme = customTheme
+import { customTheme } from './styles/CustomTheme';
 
 function App() {
 
+    const theme = customTheme;
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {

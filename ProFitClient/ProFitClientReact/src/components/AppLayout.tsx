@@ -13,7 +13,7 @@ const AppLayout = () => {
     return (
         <div style={{ display: 'flex', width: '100vw', height: '100vh' }} className="app-layout">
             {/* Sidebar */}
-            <Sidebar isOpen={isSidebarOpen} onToggleSidebar={handleToggleSidebar} />
+            <Sidebar onToggleSidebar={handleToggleSidebar} />
 
             {/* Main Content */}
             <div

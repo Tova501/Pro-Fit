@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { JobPostModel } from '../models/jobTypes';
-import axiosHttp from './axioshttp';
+import axiosHttp from './axiosHttp';
 
 // קבלת כל המשרות
 export const getAllJobs = async () => {

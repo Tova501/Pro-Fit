@@ -2,7 +2,6 @@ import { Box, Grid, Typography } from '@mui/material';
 import { Search, Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import ActionCard from '../components/common/ActionCard';
-import Footer from '../components/Footer';
 
 const CandidateHome = () => {
   const navigate = useNavigate();

@@ -14,12 +14,14 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import StarRateIcon from '@mui/icons-material/StarRate';
 import ProfitLogo from '../assets/proFitLogo.png';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 
 interface SidebarProps {
-  onToggleSidebar: (isOpen:boolean) => void;  
+  onToggleSidebar: (isOpen: boolean) => void;
 }
 
-const Sidebar = ({onToggleSidebar}:SidebarProps) => {
+const Sidebar = ({ onToggleSidebar }: SidebarProps) => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(checkAuth());
@@ -37,11 +39,11 @@ const Sidebar = ({onToggleSidebar}:SidebarProps) => {
   const [open, setOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-    const toggleSidebar = () => {
-        const newState = !open;
-        setOpen(newState);
-        onToggleSidebar(newState);
-    };
+  const toggleSidebar = () => {
+    const newState = !open;
+    setOpen(newState);
+    onToggleSidebar(newState);
+  };
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -88,15 +90,34 @@ const Sidebar = ({onToggleSidebar}:SidebarProps) => {
 
           {isLoggedIn && (
             <>
+              {!isCandidate && <ListItem disablePadding>
+                <ListItemButton component={Link} to={'/recruiter'} sx={{ color: 'white', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.08)' } }}>
+                  <ListItemIcon sx={{ color: 'white' }}>
+                    <PersonSearchIcon />
+                  </ListItemIcon>
+                  {open && <ListItemText primary="Recruiter Dashboard" sx={colorButtonSx} />}
+                </ListItemButton>
+              </ListItem>
+              }
+              {!isRecruiter && <ListItem disablePadding>
+                <ListItemButton component={Link} to={'/candidate'} sx={{ color: 'white', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.08)' } }}>
+                  <ListItemIcon sx={{ color: 'white' }}>
+                    <QueryStatsIcon />
+                  </ListItemIcon>
+                  {open && <ListItemText primary="Candidate Dashboard" sx={colorButtonSx} />}
+                </ListItemButton>
+              </ListItem>
+              }
               {isRecruiter && (
-                <><ListItem disablePadding>
-                  <ListItemButton component={Link} to={'/recruiter/job'} sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.08)' } }}>
-                    <ListItemIcon sx={{ color: 'white' }}>
-                      <WorkIcon />
-                    </ListItemIcon>
-                    {open && <ListItemText sx={colorButtonSx} primary="Jobs Dashboard" />}
-                  </ListItemButton>
-                </ListItem>
+                <>
+                  <ListItem disablePadding>
+                    <ListItemButton component={Link} to={'/recruiter/job'} sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.08)' } }}>
+                      <ListItemIcon sx={{ color: 'white' }}>
+                        <WorkIcon />
+                      </ListItemIcon>
+                      {open && <ListItemText sx={colorButtonSx} primary="Jobs Dashboard" />}
+                    </ListItemButton>
+                  </ListItem>
                   <ListItem disablePadding>
                     <ListItemButton component={Link} to={'/recruiter/job/add'}>
                       <ListItemIcon sx={{ color: 'white' }}>

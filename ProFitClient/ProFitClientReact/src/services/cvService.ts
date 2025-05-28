@@ -1,4 +1,4 @@
-import axiosHttp from './axioshttp';
+import axiosHttp from './axiosHttp';
 import store from '../redux/store';
 import { Application } from '../models/applicationType';
 import { fetchJobs } from '../redux/slices/jobSlice';

@@ -1,4 +1,4 @@
-import axiosHttp from './axioshttp';
+import axiosHttp from './axiosHttp';
 
 export const getJobApplications = async (jobId: number | undefined) => {
     try {

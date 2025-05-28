@@ -1,4 +1,4 @@
-import axiosHttp from './axioshttp';
+import axiosHttp from './axiosHttp';
 import User from '../models/userTypes';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/authTypes';
 import axios from 'axios';

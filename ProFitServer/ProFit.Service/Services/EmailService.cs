@@ -40,7 +40,7 @@ namespace ProFit.Service.Services
                 {
                     client.ServerCertificateValidationCallback = (s, c, h, e) => true;
                     var smtp = Environment.GetEnvironmentVariable("SMTP_SERVER");
-                    var port = int.Parse(Environment.GetEnvironmentVariable("PORT"));
+                    var port = int.Parse(Environment.GetEnvironmentVariable("SMTP_PORT"));
                     var email = Environment.GetEnvironmentVariable("GOOGLE_USER_EMAIL");
                     var password = Environment.GetEnvironmentVariable("GOOGLE_USER_PASSWORD");
                     await client.ConnectAsync(smtp, port, SecureSocketOptions.StartTls);

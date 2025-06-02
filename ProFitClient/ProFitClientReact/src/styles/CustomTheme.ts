@@ -11,11 +11,11 @@ export const customTheme = createTheme({
             contrastText: '#000000',
         },
         background: {
-            default: '#f0f4f8',
+            default: '##f0f4f8',
             paper: '#ffffff',
         },
         error: {
-            main: '#d00000',
+            main: '#c62d21',
         },
         success: {
             main: '#007f5f',

@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../redux/store';
-import { fetchApplications, markAsFavorite, unmarkAsFavorite } from '../../redux/slices/applicationSlice';
-import { Container, Typography, Box, CircularProgress } from '@mui/material';
-import ApplicantCard from './ApplicationCard';
+import { fetchApplications } from '../../redux/slices/applicationSlice';
+import { Container, Typography, Box, CircularProgress, Grid, Paper } from '@mui/material';
+import ApplicationCard from './ApplicationCard';
 
 const Applications = () => {
   const navigate = useNavigate();
@@ -18,20 +18,8 @@ const Applications = () => {
     }
   }, [dispatch, jobId]);
 
-  const handleToggleFavorite = (id: number, isFavorite: boolean) => {
-    if (isFavorite) {
-      dispatch(unmarkAsFavorite(id));
-    } else {
-      dispatch(markAsFavorite(id));
-    }
-  };
-
   const handleViewMore = (id: number) => {
     navigate(`${id}`);
-  };
-
-  const handleSendEmail = (email: string) => {
-    window.location.href = `mailto:${email}`;
   };
 
   if (loading) {
@@ -45,39 +33,55 @@ const Applications = () => {
   if (error) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="40vh">
-        <Typography color="error">{error}</Typography>
+        <Typography color="error" variant="h6">
+          Oops! Something went wrong. Please try again later.
+        </Typography>
       </Box>
     );
   }
 
   return (
-    <Container>
+    <Container sx={{ paddingY: 4 }}>
       {/* כותרת */}
-      <Typography
-        variant="h4"
-        gutterBottom
+      <Paper
+        elevation={3}
         sx={{
+          padding: 3,
+          marginBottom: 4,
+          backgroundColor: '#f5f5f5',
+          borderRadius: 2,
           textAlign: 'center',
-          fontWeight: 600,
-          color: 'primary.main',
-          marginBottom: 3,
         }}
       >
-        Applications for Job #{jobId}
-      </Typography>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+          Applications for Job #{jobId}
+        </Typography>
+        <Typography variant="body1" sx={{ color: 'text.secondary', marginTop: 1 }}>
+          Review and manage all applications for this job posting.
+        </Typography>
+      </Paper>
 
       {/* רשימת המועמדים */}
-      <Box display="flex" flexDirection="column" gap={2}>
-        {applications.map((application) => (
-          <ApplicantCard
-            key={application.id}
-            application={application}
-            onToggleFavorite={handleToggleFavorite}
-            onViewMore={handleViewMore}
-            onSendEmail={handleSendEmail}
-          />
-        ))}
-      </Box>
+      {applications.length === 0 ? (
+        <Typography
+          variant="body1"
+          sx={{
+            textAlign: 'center',
+            color: 'text.secondary',
+            marginTop: 5,
+          }}
+        >
+          No applications found for this job. Check back later!
+        </Typography>
+      ) : (
+        <Grid container spacing={3}>
+          {applications.map((application) => (
+            <Grid item xs={12} sm={6} md={4} key={application.id}>
+              <ApplicationCard application={application} onViewMore={handleViewMore} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </Container>
   );
 };

@@ -43,7 +43,7 @@ const CandidateJobList = () => {
 
   return (
     <Box sx={{ padding: 4 }}>
-      <Typography color='primary' variant="h4" sx={{ fontWeight: 'bold', marginBottom: 3 }}>
+      <Typography color='primary.main' variant="h4" sx={{ fontWeight: 'bold', marginBottom: 3 }}>
         Available Jobs
       </Typography>
 
@@ -57,7 +57,7 @@ const CandidateJobList = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             InputProps={{
-              startAdornment: <SearchIcon sx={{ marginRight: 1 }} />,
+              startAdornment: <SearchIcon sx={{ marginRight: 1, color:'primary.main' }} />,
             }}
             fullWidth
           />
@@ -71,7 +71,7 @@ const CandidateJobList = () => {
             value={filterLocation}
             onChange={(e) => setFilterLocation(e.target.value)}
             InputProps={{
-              startAdornment: <LocationOnIcon sx={{ marginRight: 1 }} />,
+              startAdornment: <LocationOnIcon sx={{ marginRight: 1, color:'primary.main' }} />,
             }}
             fullWidth
           />
@@ -85,7 +85,7 @@ const CandidateJobList = () => {
             value={filterCompany}
             onChange={(e) => setFilterCompany(e.target.value)}
             InputProps={{
-              startAdornment: <BusinessIcon sx={{ marginRight: 1 }} />,
+              startAdornment: <BusinessIcon sx={{ marginRight: 1, color:'primary.main' }} />,
             }}
             fullWidth
           />
@@ -100,7 +100,7 @@ const CandidateJobList = () => {
             value={filterExperience}
             onChange={(e) => setFilterExperience(e.target.value === '' ? '' : parseInt(e.target.value))}
             InputProps={{
-              startAdornment: <TimelineIcon sx={{ marginRight: 1 }} />,
+              startAdornment: <TimelineIcon sx={{ marginRight: 1, color:'primary.main' }} />,
             }}
             fullWidth
           />
@@ -138,7 +138,7 @@ const CandidateJobList = () => {
 
               <CardContent>
                 {/* Job Title */}
-                <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 ,color:'primary.main'}}>
                   {job.title}
                 </Typography>
 
@@ -148,7 +148,8 @@ const CandidateJobList = () => {
                     <BusinessIcon fontSize="small" /> {job.company}
                   </Typography>
                   <Typography variant="body2" color="textSecondary" display="flex" alignItems="center" gap={1}>
-                    <LocationOnIcon fontSize="small" /> {job.location}
+                    <LocationOnIcon fontSize="small" /> 
+                    {job.location}
                   </Typography>
                 </Box>
 

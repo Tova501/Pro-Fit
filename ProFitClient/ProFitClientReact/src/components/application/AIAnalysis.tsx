@@ -13,7 +13,7 @@ interface AIAnalysisProps {
 const AIAnalysis: React.FC<AIAnalysisProps> = ({ loading, aiAssessment }) => {
     if (loading) {
         return (
-            <Box className="application-loading">
+            <Box className="application-loading" sx={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 <CircularProgress size={24} />
             </Box>
         );
@@ -28,27 +28,29 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({ loading, aiAssessment }) => {
     }
 
     return (
-        <Box className="application-assessment-content">
-            <Typography variant="subtitle1" className="application-score">
-                Matching Score: {aiAssessment.score}
-            </Typography>
-            {aiAssessment.adventages.map((adv, index) => (
-                <Box key={index} className="application-advantage">
-                    <CheckCircleIcon color="success" />
-                    <Typography variant="body2">{adv}</Typography>
-                </Box>
-            ))}
-            {aiAssessment.disadvantages.map((disadvantage, index) => (
-                <Box key={index} className="application-disadvantage">
-                    <CancelIcon color="error" />
-                    <Typography variant="body2">{disadvantage}</Typography>
-                </Box>
-            ))}
-            <Typography variant="body2" className="application-recommendation">
-                <AssistantIcon />
-                {aiAssessment.recommendation}
-            </Typography>
-        </Box>
+        aiAssessment && (
+            <Box className="application-assessment-content">
+                <Typography variant="subtitle1" className="application-score">
+                    Matching Score: {aiAssessment.score}
+                </Typography>
+                {aiAssessment.adventages.map((adv, index) => (
+                    <Box key={index} className="application-advantage">
+                        <CheckCircleIcon color="success" />
+                        <Typography variant="body2">{adv}</Typography>
+                    </Box>
+                ))}
+                {aiAssessment.disadvantages.map((disadvantage, index) => (
+                    <Box key={index} className="application-disadvantage">
+                        <CancelIcon color="error" />
+                        <Typography variant="body2">{disadvantage}</Typography>
+                    </Box>
+                ))}
+                <Typography variant="body2" className="application-recommendation">
+                    <AssistantIcon />
+                    {aiAssessment.recommendation}
+                </Typography>
+            </Box>
+        )
     );
 };
 

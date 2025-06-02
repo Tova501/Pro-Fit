@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../redux/store';
 import { fetchJobs, toggleJobStatus, removeJob } from '../../redux/slices/jobSlice';
-import { Box, Typography, Menu, MenuItem } from '@mui/material';
+import { Box, Typography, Grid, Menu, MenuItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import RecruiterJobCard from './RecruiterJobCard';
 import DeleteJobDialog from './DeleteJobDialog';
@@ -60,19 +60,19 @@ const RecruiterJobList = () => {
     };
 
     return (
-        <Box sx={{ padding: 4, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+        <Box sx={{ padding: 4 }}>
+            {/* כותרת */}
             <Typography
                 variant="h4"
                 sx={{
+                    fontWeight: 'bold',
                     textAlign: 'center',
-                    fontWeight: 600,
-                    marginBottom: 1,
                     color: 'primary.main',
+                    marginBottom: 3,
                 }}
             >
                 Job Management Dashboard
             </Typography>
-
             <Typography
                 variant="body1"
                 sx={{
@@ -84,31 +84,24 @@ const RecruiterJobList = () => {
                 Manage your job postings efficiently. Add, edit, or deactivate jobs as needed.
             </Typography>
 
+            {/* תפריט פעולות */}
             <JobActionsMenu />
 
-            {jobs.length > 0 && <Box
-                display="flex"
-                flexWrap="wrap"
-                gap={3}
-                justifyContent="center"
-                sx={{
-                    backgroundColor: 'white',
-                    padding: 3,
-                    borderRadius: '8px',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-                }}
-            >
+            {/* רשימת משרות */}
+            <Grid container spacing={3}>
                 {jobs.map((job) => (
-                    <RecruiterJobCard
-                        key={job.id}
-                        job={job}
-                        onToggleStatus={handleToggleStatus}
-                        onMenuOpen={handleMenuOpen}
-                    />
+                    <Grid item xs={12} sm={6} md={4} key={job.id}>
+                        <RecruiterJobCard
+                            job={job}
+                            onToggleStatus={handleToggleStatus}
+                            onMenuOpen={handleMenuOpen}
+                        />
+                    </Grid>
                 ))}
-            </Box>}
+            </Grid>
 
-            <Menu
+            {/* תפריט */}
+            <Menu 
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
@@ -124,12 +117,7 @@ const RecruiterJobList = () => {
                 </MenuItem>
             </Menu>
 
-            <DeleteJobDialog
-                open={deleteDialogOpen}
-                onClose={handleDeleteDialogClose}
-                onDelete={handleDelete}
-            />
-
+            {/* הודעה */}
             <Box
                 sx={{
                     display: 'flex',

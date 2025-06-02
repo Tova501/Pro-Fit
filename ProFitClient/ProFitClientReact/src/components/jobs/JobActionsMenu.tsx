@@ -41,38 +41,32 @@ const JobActionsMenu = () => {
                 display: 'flex',
                 justifyContent: 'flex-end',
                 alignItems: 'center',
-                backgroundColor: '#f9f9f9',
-                padding: 1,
-                borderRadius: '8px',
+                gap: 2,
                 marginBottom: 3,
-                boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.1)',
             }}
         >
             <Tooltip title="Add New Job" arrow>
                 <IconButton
                     color="primary"
                     onClick={() => navigate('/recruiter/job/add')}
-                    sx={{ marginRight: 1 }}
                 >
-                    <AddCircleOutlineIcon fontSize="small" />
+                    <AddCircleOutlineIcon />
                 </IconButton>
             </Tooltip>
             <Tooltip title="View Reports" arrow>
                 <IconButton
                     color="primary"
                     onClick={() => navigate('/recruiter/job/reports')}
-                    sx={{ marginRight: 1 }}
                 >
-                    <BarChartIcon fontSize="small" />
+                    <BarChartIcon />
                 </IconButton>
             </Tooltip>
             <Tooltip title="Filter Jobs" arrow>
                 <IconButton
                     color="primary"
                     onClick={() => console.log('Filter Jobs')}
-                    sx={{ marginRight: 1 }}
                 >
-                    <FilterListIcon fontSize="small" />
+                    <FilterListIcon />
                 </IconButton>
             </Tooltip>
             <Tooltip title="Export Data" arrow>
@@ -80,7 +74,7 @@ const JobActionsMenu = () => {
                     color="primary"
                     onClick={handleExportData}
                 >
-                    <DownloadIcon fontSize="small" />
+                    <DownloadIcon />
                 </IconButton>
             </Tooltip>
         </Box>

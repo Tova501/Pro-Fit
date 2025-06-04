@@ -19,4 +19,5 @@ export interface Job {
     location: string;
     recruiterId: number;
     isActive: boolean;
+    createdAt: Date
 }

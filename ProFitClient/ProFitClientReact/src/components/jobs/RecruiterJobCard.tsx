@@ -47,7 +47,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, onToggleStatus, onMenuOpen }) =>
                         <LocationOnIcon fontSize="small" /> {job.location}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                        <strong>Posted On:</strong> {new Date(job.postedDate).toLocaleDateString()}
+                        <strong>Posted On:</strong> {new Date(job.createdAt).toLocaleDateString()}
                     </Typography>
                 </Box>
 

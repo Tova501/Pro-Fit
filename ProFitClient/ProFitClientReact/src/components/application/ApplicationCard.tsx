@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Avatar, Typography, IconButton, Box, Tooltip, CircularProgress, Collapse, Button } from '@mui/material';
+import { Card, Avatar, Typography, IconButton, Box, Tooltip, CircularProgress, Collapse, Button } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import EmailIcon from '@mui/icons-material/Email';

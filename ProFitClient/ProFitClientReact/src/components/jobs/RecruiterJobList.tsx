@@ -101,7 +101,7 @@ const RecruiterJobList = () => {
             </Grid>
 
             {/* תפריט */}
-            <Menu 
+            <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
@@ -116,6 +116,13 @@ const RecruiterJobList = () => {
                     Delete Job
                 </MenuItem>
             </Menu>
+
+            {/* דיאלוג מחיקה */}
+            <DeleteJobDialog
+                open={deleteDialogOpen}
+                onClose={handleDeleteDialogClose}
+                onDelete={handleDelete}
+            />
 
             {/* הודעה */}
             <Box

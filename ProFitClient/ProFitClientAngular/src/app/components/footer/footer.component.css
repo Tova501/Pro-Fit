@@ -1,0 +1,34 @@
+  mat-toolbar {
+    justify-content: center;
+    position: fixed;
+    z-index: 1000;
+    bottom: 0;
+    background-color: black;
+    color: white; 
+  }
+  .footer-toolbar {
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    padding: 0 16px;
+    height: 64px;
+  }
+  
+  .footer-left {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .footer-left a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .footer-center {
+    text-align: center;
+    font-size: 0.9rem;
+    color: white;
+  }

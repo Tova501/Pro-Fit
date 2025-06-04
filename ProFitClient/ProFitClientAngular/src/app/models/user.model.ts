@@ -1,9 +1,9 @@
 export class UserPostModel {
     constructor(
-      public role: string,
-      public name: string,
+      public firstName: string,
+      public lastName: string,
       public email: string,
-      public password: string
+      public password: string,
     ) { }
   }
   
@@ -14,10 +14,12 @@ export class UserPostModel {
   export class User {
       constructor(
       public id: number,
-      public role: string,
       public name: string,
       public email: string,
-      public password: string) { }
+      public password: string,
+      public isActive: boolean,
+      public userId: number) { }
   }
-  export const emptyUser = new User(0, '', '', '', '');
+
+  export const emptyUser = new User(0, '', '', '', false, 0);
   

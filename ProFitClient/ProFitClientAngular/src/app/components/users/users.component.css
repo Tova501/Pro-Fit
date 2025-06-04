@@ -1,0 +1,146 @@
+/* עיצוב כללי */
+.users-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 2rem;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* עיצוב שדות הסינון */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.filters select,
+.filters input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 200px;
+    transition: border-color 0.3s;
+}
+
+.filters select:focus,
+.filters input:focus {
+    border-color: #10a37f;
+    outline: none;
+}
+
+/* עיצוב טבלת המשתמשים */
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.users-table th,
+.users-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    font-size: 14px;
+}
+
+.users-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #555;
+}
+
+.users-table td {
+    color: #666;
+}
+
+.users-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* עיצוב סטטוס */
+.status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    display: inline-block;
+}
+
+.status.active {
+    color: #10a37f;
+}
+
+.status.inactive {
+    color: #d9534f;
+}
+
+/* עיצוב כפתורים */
+button {
+    padding: 8px 12px;
+    border: none;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+}
+
+.deactivate-btn {
+    background-color: #f0f0f0;
+    color: #d9534f;
+}
+
+.deactivate-btn:hover {
+    background-color: #d9534f;
+    color: white;
+}
+
+.reactivate-btn {
+    background-color: #f0f0f0;
+    color: #10a37f;
+}
+
+.reactivate-btn:hover {
+    background-color: #10a37f;
+    color: white;
+}
+
+.delete-btn {
+    color: #ff0019;
+}
+
+.delete-btn:hover {
+    background-color: #ff0019;
+    color: white;
+}
+
+/* הודעה כאשר אין משתמשים */
+.no-users {
+    text-align: center;
+    color: #888;
+    font-size: 16px;
+    margin-top: 1rem;
+}
+
+/* עיצוב עמודת ה-Actions */
+.actions {
+    display: flex;
+    gap: 10px; /* ריווח בין הכפתורים */
+    justify-content: center;
+    align-items: center;
+}

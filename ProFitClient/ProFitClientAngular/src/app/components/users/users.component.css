@@ -1,4 +1,3 @@
-/* עיצוב כללי */
 .users-container {
     max-width: 900px;
     margin: auto;
@@ -16,7 +15,6 @@ h2 {
     text-align: center;
 }
 
-/* עיצוב שדות הסינון */
 .filters {
     display: flex;
     flex-wrap: wrap;
@@ -30,18 +28,9 @@ h2 {
     padding: 10px;
     font-size: 14px;
     border: 1px solid #ccc;
-    border-radius: 6px;
-    width: 200px;
-    transition: border-color 0.3s;
+    border-radius: 4px;
 }
 
-.filters select:focus,
-.filters input:focus {
-    border-color: #10a37f;
-    outline: none;
-}
-
-/* עיצוב טבלת המשתמשים */
 .users-table {
     width: 100%;
     border-collapse: collapse;
@@ -73,7 +62,20 @@ h2 {
     background-color: #f1f1f1;
 }
 
-/* עיצוב סטטוס */
+.no-users {
+    text-align: center;
+    color: #888;
+    font-size: 16px;
+    margin-top: 1rem;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
 .status {
     font-weight: bold;
     padding: 5px 10px;
@@ -90,7 +92,6 @@ h2 {
     color: #d9534f;
 }
 
-/* עיצוב כפתורים */
 button {
     padding: 8px 12px;
     border: none;
@@ -127,20 +128,4 @@ button {
 .delete-btn:hover {
     background-color: #ff0019;
     color: white;
-}
-
-/* הודעה כאשר אין משתמשים */
-.no-users {
-    text-align: center;
-    color: #888;
-    font-size: 16px;
-    margin-top: 1rem;
-}
-
-/* עיצוב עמודת ה-Actions */
-.actions {
-    display: flex;
-    gap: 10px; /* ריווח בין הכפתורים */
-    justify-content: center;
-    align-items: center;
 }

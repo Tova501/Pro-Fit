@@ -12,7 +12,6 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-
   private hasToken(): boolean {
     if (typeof localStorage === 'undefined') {
       return false;
@@ -23,6 +22,7 @@ export class AuthService {
   isLoggedIn(): Observable<boolean> {
     return this.loggedIn.asObservable();
   }
+
   login(credentials: UserLogin): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: any) => {

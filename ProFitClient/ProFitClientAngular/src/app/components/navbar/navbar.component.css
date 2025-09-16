@@ -1,55 +1,40 @@
 .navbar {
-    background-color: #fefefe; /* Soft and light color */
-    padding: 1rem 2rem;
-    box-shadow: none;
-    border-bottom: 1px solid #ddd;
-    position: sticky;
-    top:0;
-    z-index: 1000;
-  }
-  
-  .navbar-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .logo a {
-    font-family: 'Inter', sans-serif;
-    font-size: 24px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #1e1e1e;
-  }
-  
-  .nav-links {
+    padding: 1rem 2rem;
+    background-color: #10a37f;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .logo img {
+    height: 40px;
+}
+
+.nav-links {
     list-style: none;
     display: flex;
-    gap: 2rem;
-  }
-  
-  .nav-item {
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
+    gap: 1.5rem;
+}
+
+.nav-item {
     text-decoration: none;
-    color: #1e1e1e;
+    color: white;
+    font-weight: 500;
     transition: color 0.3s ease;
-    background-color: transparent;
-    border: none;
-  }
-  
-  .nav-item:hover {
-    color: #00b0b0; 
-  }
-  
-  .auth-buttons {
+}
+
+.nav-item:hover {
+    color: #e0e0e0;
+}
+
+.auth-buttons {
     display: flex;
     gap: 1rem;
-  }
-  
-  .btn {
+}
+
+.btn {
     padding: 0.6rem 1.2rem;
     border-radius: 4px;
     border: none;
@@ -57,25 +42,24 @@
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .login-btn {
+}
+
+.login-btn {
+    background-color: #ffffff; 
+    color: #10a37f;
+}
+
+.login-btn:hover {
+    background-color: #e0e0e0; 
+    transform: scale(1.05);
+}
+
+.signup-btn {
     background-color: #00b0b0; 
     color: #fff;
-  }
-  
-  .login-btn:hover {
+}
+
+.signup-btn:hover {
     background-color: #008c8c; 
     transform: scale(1.05);
-  }
-  
-  .signup-btn {
-    background-color: #4CAF50; 
-    color: #fff;
-  }
-  
-  .signup-btn:hover {
-    background-color: #45a049; 
-    transform: scale(1.05);
-  }
-  
+}

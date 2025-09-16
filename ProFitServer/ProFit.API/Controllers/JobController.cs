@@ -32,6 +32,7 @@ namespace ProFit.API.Controllers
         }
 
         // GET: api/<JobController>
+        [Authorize(Policy = "User")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JobDTO>>> Get()
         {
@@ -40,6 +41,7 @@ namespace ProFit.API.Controllers
 
 
         // GET api/<JobController>/5
+        [Authorize(Policy = "User")]
         [HttpGet("{id}")]
         public async Task<ActionResult<JobDTO>> Get(int id)
         {

@@ -62,5 +62,30 @@ namespace ProFit.API.Controllers
                 return BadRequest();
             return Ok();
         }
+
+        // GET: api/user/growth-over-time
+        [HttpGet("growth-over-time")]
+        public async Task<ActionResult<IEnumerable<UserGrowthOverTimeDTO>>> GetUserGrowthOverTime()
+        {
+            var data = await _userService.GetUserGrowthOverTime();
+            return Ok(data);
+        }
+
+        // GET: api/user/active-status-pie
+        [HttpGet("active-status-pie")]
+        public async Task<ActionResult<UserActiveStatusPieDTO>> GetUserActiveStatusPie()
+        {
+            var data = await _userService.GetUserActiveStatusPie();
+            return Ok(data);
+        }
+
+        // GET: api/user/cv-upload-bar
+        [HttpGet("cv-upload-bar")]
+        public async Task<ActionResult<UserCVUploadBarDTO>> GetUserCVUploadBar()
+        {
+            var data = await _userService.GetUserCVUploadBar();
+            return Ok(data);
+        }
+
     }
 }

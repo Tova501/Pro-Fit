@@ -1,106 +1,69 @@
+// filepath: c:\Users\user1\Desktop\ProFit\ProFitClient\ProFitClientAngular\src\app\components\users\users.component.ts
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
+import { GraphService } from '../../services/graph.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [FormsModule, MatIconModule],
+  imports: [],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css'
+  styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  users: any[] = [];
-  filteredUsers: any[] = [];
+  users: User[] = [];
   loading: boolean = true;
-  searchTerm: string = '';
-  emailSearchTerm: string = '';
-  statusFilter: string = 'all';
+  userGrowthData: any[] = [];
+  activeStatusData: any[] = [];
+  cvUploadData: any[] = [];
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private graphService: GraphService) { }
 
   ngOnInit(): void {
     this.fetchUsers();
+    this.fetchGraphData();
   }
 
   fetchUsers(): void {
     this.userService.getAllUsers().subscribe(
-      (data: any[]) => {
+      (data: User[]) => {
         this.users = data;
-        this.applyFilters(); // החל סינון לאחר טעינת הנתונים
         this.loading = false;
       },
-      (error: any) => {
+      (error) => {
         console.error('Error fetching users:', error);
         this.loading = false;
       }
     );
   }
 
-  applyFilters(): void {
-    this.filteredUsers = this.users.filter(user => {
-      const matchesStatus =
-        this.statusFilter === 'all' ||
-        (this.statusFilter === 'active' && user.isActive) ||
-        (this.statusFilter === 'inactive' && !user.isActive);
-
-      const matchesNameSearch =
-        !this.searchTerm ||
-        user.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.lastName.toLowerCase().includes(this.searchTerm.toLowerCase());
-
-      const matchesEmailSearch =
-        !this.emailSearchTerm ||
-        user.email.toLowerCase().includes(this.emailSearchTerm.toLowerCase());
-
-      return matchesStatus && matchesNameSearch && matchesEmailSearch;
-    });
-  }
-
-  filterUsers(): void {
-    this.applyFilters();
-  }
-
-  deactivateUser(userId: number): void {
-    this.userService.deactivateUser(userId).subscribe(
-      () => {
-        console.log('User deactivated successfully');
-        this.fetchUsers(); // רענן את רשימת המשתמשים
+  fetchGraphData(): void {
+    this.graphService.getUserGrowth().subscribe(
+      (data) => {
+        this.userGrowthData = data;
       },
       (error) => {
-        console.error('Error deactivating user:', error);
+        console.error('Error fetching user growth data:', error);
       }
     );
-  }
 
-  reactivateUser(userId: number): void {
-    this.userService.reactivateUser(userId).subscribe(
-      () => {
-        console.log('User reactivated successfully');
-        this.fetchUsers(); // רענן את רשימת המשתמשים
+    this.graphService.getActiveStatus().subscribe(
+      (data) => {
+        this.activeStatusData = data;
       },
       (error) => {
-        console.error('Error reactivating user:', error);
+        console.error('Error fetching active status data:', error);
       }
     );
-  }
 
-  deleteUser(userId: number): void {
-    if (confirm('Are you sure you want to delete this user?')) {
-      this.userService.deleteUser(userId).subscribe(
-        () => {
-          console.log('User deleted successfully');
-          this.fetchUsers();
-        },
-        (error) => {
-          console.error('Error deleting user:', error);
-        }
-      );
-    }
-  }
-
-  trackByUserId(index: number, user: any): number {
-    return user.id; // מעקב לפי מזהה המשתמש
+    this.graphService.getCvUploadData().subscribe(
+      (data) => {
+        this.cvUploadData = data;
+      },
+      (error) => {
+        console.error('Error fetching CV upload data:', error);
+      }
+    );
   }
 }

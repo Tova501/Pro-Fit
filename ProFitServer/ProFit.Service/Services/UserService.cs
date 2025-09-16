@@ -94,5 +94,43 @@ namespace ProFit.Service.Services
             var resultDTO = _mapper.Map<UserDTO>(result);
             return resultDTO;
         }
+
+        public async Task<IEnumerable<UserGrowthOverTimeDTO>> GetUserGrowthOverTime()
+        {
+            // דוגמה: קיבוץ לפי חודש
+            var users = await _repository.Users.GetAsync();
+            return users.GroupBy(u => new DateTime(u.CreatedAt.Year, u.CreatedAt.Month, 1))
+                    .Select(g => new UserGrowthOverTimeDTO
+                    {
+                        Date = g.Key,
+                        UserCount = g.Count()
+                    })
+                    .OrderBy(x => x.Date)
+                    .ToList();
+        }
+
+        public async Task<UserActiveStatusPieDTO> GetUserActiveStatusPie()
+        {
+            var users = await _repository.Users.GetAsync();
+            var active = users.Count(u => u.IsActive);
+            var inactive = users.Count(u => !u.IsActive);
+            return new UserActiveStatusPieDTO
+            {
+                ActiveUsers = active,
+                InactiveUsers = inactive
+            };
+        }
+
+        public async Task<UserCVUploadBarDTO> GetUserCVUploadBar()
+        {
+            var users = await _repository.Users.GetAsync();
+            var uploaded = users.Count(u => u.HasUploadedGeneralCV);
+            var notUploaded = users.Count(u => !u.HasUploadedGeneralCV);
+            return new UserCVUploadBarDTO
+            {
+                UploadedCV = uploaded,
+                NotUploadedCV = notUploaded
+            };
+        }
     }
 }

@@ -1,4 +1,24 @@
+/* Global styles for the app component */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+}
+
 .content {
-    padding-bottom: 70px; 
-    padding-top: 70px; 
-  }
+    padding: 20px;
+}
+
+/* Navbar styles */
+app-navbar {
+    margin-bottom: 20px;
+}
+
+/* Footer styles */
+app-footer {
+    margin-top: 20px;
+    background-color: #3f51b5;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}

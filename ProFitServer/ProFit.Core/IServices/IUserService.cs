@@ -18,5 +18,8 @@ namespace ProFit.Core.IServices
         public Task<UserDTO> UpdatePersonalDetailsAsync(int id, UserDTO user);
         public Task<UserDTO?> ToggleUserStatus(int id);
         public Task<bool> DeleteUserAsync(int id);
+        public Task<IEnumerable<UserGrowthOverTimeDTO>> GetUserGrowthOverTime();
+        public Task<UserActiveStatusPieDTO> GetUserActiveStatusPie();
+        public Task<UserCVUploadBarDTO> GetUserCVUploadBar();
     }
 }

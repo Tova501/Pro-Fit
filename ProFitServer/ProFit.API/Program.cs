@@ -41,7 +41,6 @@ namespace ProFit.API
                     new MySqlServerVersion(new Version(8, 0, 23)), 
                     options => options.MigrationsHistoryTable("__EFMigrationsHistory")
                 );    
-                //options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
             });
 
             builder.Services.AddScoped<IJobService, JobService>();
@@ -68,6 +67,12 @@ namespace ProFit.API
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("User", policy => policy.RequireRole("User", "Admin"));
+            });
+
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -81,7 +86,7 @@ namespace ProFit.API
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuers = Environment.GetEnvironmentVariable("JWT_ISSUERS")?.Split(',', StringSplitOptions.RemoveEmptyEntries),
+                    ValidIssuers = Environment.GetEnvironmentVariable("JWT_ISSUER")?.Split(',', StringSplitOptions.RemoveEmptyEntries),
                     ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")))
                 };

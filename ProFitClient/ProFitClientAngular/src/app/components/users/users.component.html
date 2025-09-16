@@ -1,7 +1,6 @@
 <div class="users-container">
     <h2>Manage Users</h2>
 
-    <!-- סינון וחיפוש -->
     <div class="filters">
         <select [(ngModel)]="statusFilter" (change)="filterUsers()">
             <option value="all">All</option>
@@ -12,16 +11,11 @@
         <input type="text" placeholder="Search by email" [(ngModel)]="emailSearchTerm" (input)="filterUsers()" />
     </div>
 
-    <!-- טוען משתמשים -->
-    @if(loading){
-    <div class="loading">
+    <div *ngIf="loading" class="loading">
         <span class="spinner"></span> Loading users...
     </div>
-    }
-    <!-- טבלת משתמשים -->
-    @if(!loading && filteredUsers.length > 0){
 
-    <table class="users-table">
+    <table *ngIf="!loading && filteredUsers.length > 0" class="users-table">
         <thead>
             <tr>
                 <th>First Name</th>
@@ -32,8 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            @for(user of filteredUsers; track user.id;){
-            <tr>
+            <tr *ngFor="let user of filteredUsers; trackBy: trackByUserId">
                 <td>{{ user.firstName }}</td>
                 <td>{{ user.lastName }}</td>
                 <td>{{ user.email }}</td>
@@ -42,33 +35,22 @@
                         {{ user.isActive ? 'Active' : 'Inactive' }}
                     </span>
                 </td>
-                <td class = "actions">
-                    @if(user.isActive)
-                    {
-                    <button (click)="deactivateUser(user.id)" class="deactivate-btn">
+                <td class="actions">
+                    <button *ngIf="user.isActive" (click)="deactivateUser(user.id)" class="deactivate-btn">
                         Deactivate
                     </button>
-                    }
-                    @else{
-                    <button (click)="reactivateUser(user.id)" class="reactivate-btn">
+                    <button *ngIf="!user.isActive" (click)="reactivateUser(user.id)" class="reactivate-btn">
                         Reactivate
                     </button>
-                    }
                     <button (click)="deleteUser(user.id)" class="delete-btn">
                         <mat-icon>delete</mat-icon>
                     </button>
-
                 </td>
             </tr>
-            }
         </tbody>
-
     </table>
-    }
-    <!-- אין משתמשים -->
-    @if(!loading && filteredUsers.length === 0){
-    <div class="no-users">
+
+    <div *ngIf="!loading && filteredUsers.length === 0" class="no-users">
         No users match your search criteria.
     </div>
-    }
 </div>

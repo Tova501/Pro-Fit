@@ -3,17 +3,17 @@ import { GraphService } from '../../services/graph.service';
 import { Chart } from 'chart.js';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-graphs',
   standalone: true,
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  templateUrl: './graphs.component.html',
+  styleUrls: ['./graphs.component.css']
 })
-export class HomeComponent implements OnInit {
+export class GraphsComponent implements OnInit {
   userGrowthChart: Chart | undefined;
   activeStatusChart: Chart | undefined;
   cvUploadChart: Chart | undefined;
 
-  constructor(private graphService: GraphService) { }
+  constructor(private graphService: GraphService) {}
 
   ngOnInit(): void {
     this.loadUserGrowthChart();
@@ -73,7 +73,7 @@ export class HomeComponent implements OnInit {
           datasets: [{
             label: 'CV Uploads',
             data: data.values,
-            backgroundColor: '#00b0b0',
+            backgroundColor: '#4CAF50',
           }]
         },
         options: {

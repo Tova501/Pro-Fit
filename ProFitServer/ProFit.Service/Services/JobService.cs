@@ -51,9 +51,8 @@ namespace ProFit.Service.Services
                 throw new Exception("User Not Found");
             }
             // Check if the job has any applications
-            var applications = await _repository.Applications.GetAsync();
-            var jobApplications = applications.Where(a => a.JobId == id).ToList();
-            foreach (var application in jobApplications)
+            var applications = await _repository.Applications.GetAsync((applicaion)=>applicaion.JobId==id);
+            foreach (var application in applications)
             {
                 // Delete the application
                 if(!application.CV.IsGeneral)
